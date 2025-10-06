@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | 3D Model Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        #unity-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #unity-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        #unity-loading-bar {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        
+        #unity-logo {
+            width: 154px;
+            height: 130px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTU0IiBoZWlnaHQ9IjEzMCIgdmlld0JveD0iMCAwIDE1NCAxMzAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTQiIGhlaWdodD0iMTMwIiBmaWxsPSIjMDAwMDAwIi8+CjxwYXRoIGQ9Ik03NyA2NUw1MSA5MUw3NyAxMTdMMTAzIDkxTDc3IDY1WiIgZmlsbD0iIzAwRkZGRiIvPgo8L3N2Zz4K') no-repeat center / contain;
+        }
+        
+        #unity-progress-bar-empty {
+            width: 141px;
+            height: 18px;
+            margin-top: 10px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQxIiBoZWlnaHQ9IjE4IiB2aWV3Qm94PSIwIDAgMTQxIDE4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTQxIiBoZWlnaHQ9IjE4IiBmaWxsPSIjMzMzMzMzIi8+Cjwvc3ZnPgo=') no-repeat center / contain;
+        }
+        
+        #unity-progress-bar-full {
+            width: 0%;
+            height: 18px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQxIiBoZWlnaHQ9IjE4IiB2aWV3Qm94PSIwIDAgMTQxIDE4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTQxIiBoZWlnaHQ9IjE4IiBmaWxsPSIjMDBGRkZGIi8+Cjwvc3ZnPgo=') no-repeat center / contain;
+        }
+        
+        #unity-fullscreen-button {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            width: 38px;
+            height: 38px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzgiIGhlaWdodD0iMzgiIHZpZXdCb3g9IjAgMCAzOCAzOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM4IiBoZWlnaHQ9IjM4IiBmaWxsPSIjMDAwMDAwIi8+CjxwYXRoIGQ9Ik0xMCAxMEgxNFYxNEgxMFYxMFoiIGZpbGw9IiMwMEZGRkYiLz4KPHBhdGggZD0iTTI0IDEwSDI4VjE0SDI0VjEwWiIgZmlsbD0iIzAwRkZGRiIvPgo8cGF0aCBkPSJNMTAgMjRIMTRWMjhIMTBWMjRaIiBmaWxsPSIjMDBGRkZGIi8+CjxwYXRoIGQ9Ik0yNCAyNEgyOFYyOEgyNFYyNFoiIGZpbGw9IiMwMEZGRkYiLz4KPC9zdmc+Cg==') no-repeat center / contain;
+            cursor: pointer;
+        }
+        
+        .unity-message {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="unity-container">
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+        <div id="unity-fullscreen-button" onclick="SetFullscreen(1)"></div>
+        <div id="unity-message" class="unity-message">
+            <h3>🎮 Unity 3D Model Viewer</h3>
+            <p>Демо-версия Unity WebGL приложения</p>
+            <p>Здесь будет загружена ваша 3D модель с анимацией</p>
+        </div>
+    </div>
+
+    <script>
+        // Unity WebGL заглушка
+        let unityInstance = null;
+        let isReady = false;
+        let animationSpeed = 1.0;
+        let scale = 1.0;
+        let autoRotate = false;
+        let currentModel = 'dinosaur';
+        let currentAnimation = 'idle';
+
+        // Симуляция Unity WebGL
+        function initUnity() {
+            console.log('🎮 Инициализация Unity WebGL...');
+            
+            // Показываем сообщение вместо реального Unity
+            setTimeout(() => {
+                document.getElementById('unity-loading-bar').style.display = 'none';
+                document.getElementById('unity-message').style.display = 'block';
+                
+                // Симулируем готовность Unity
+                setTimeout(() => {
+                    isReady = true;
+                    sendMessageToParent({ type: 'UnityReady' });
+                    console.log('✅ Unity готов к работе!');
+                }, 500); // Уменьшили время ожидания
+            }, 1000); // Уменьшили время ожидания
+        }
+
+        // Отправка сообщений родительскому окну
+        function sendMessageToParent(message) {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage(message, '*');
+            }
+        }
+
+        // Получение сообщений от родительского окна
+        window.addEventListener('message', function(event) {
+            const data = event.data;
+            
+            if (data.type === 'HTMLReady') {
+                console.log('📱 HTML готов, инициализируем Unity...');
+                initUnity();
+            } else if (data.type === 'CallUnityMethod') {
+                handleUnityMethod(data.method, data.parameter);
+            }
+        });
+
+        // Обработка методов Unity
+        function handleUnityMethod(method, parameter) {
+            if (!isReady) {
+                console.log('⚠️ Unity еще не готов');
+                return;
+            }
+
+            console.log(`🎮 Вызов Unity метода: ${method}`, parameter);
+
+            switch (method) {
+                case 'PlayAnimation':
+                    playAnimation(parameter);
+                    break;
+                case 'ChangeModel':
+                    changeModel(parameter);
+                    break;
+                case 'ResetCamera':
+                    resetCamera();
+                    break;
+                case 'ToggleAutoRotate':
+                    toggleAutoRotate();
+                    break;
+                case 'SetScale':
+                    setScale(parameter);
+                    break;
+                case 'SetAnimationSpeed':
+                    setAnimationSpeed(parameter);
+                    break;
+                default:
+                    console.log('❓ Неизвестный метод:', method);
+            }
+        }
+
+        function playAnimation(animationName) {
+            currentAnimation = animationName;
+            console.log(`🎬 Воспроизведение анимации: ${animationName}`);
+            
+            // Симуляция анимации
+            const message = document.getElementById('unity-message');
+            message.innerHTML = `
+                <h3>🎮 Unity 3D Model Viewer</h3>
+                <p>Модель: ${currentModel}</p>
+                <p>Анимация: ${animationName}</p>
+                <p>Скорость: ${animationSpeed}x</p>
+                <p>Масштаб: ${scale}x</p>
+            `;
+        }
+
+        function changeModel(modelName) {
+            currentModel = modelName;
+            console.log(`🔄 Смена модели: ${modelName}`);
+            playAnimation(currentAnimation);
+        }
+
+        function resetCamera() {
+            console.log('📷 Сброс камеры');
+        }
+
+        function toggleAutoRotate() {
+            autoRotate = !autoRotate;
+            console.log(`🔄 Автоповорот: ${autoRotate ? 'включен' : 'выключен'}`);
+        }
+
+        function setScale(value) {
+            scale = value;
+            console.log(`📏 Масштаб: ${scale}`);
+            playAnimation(currentAnimation);
+        }
+
+        function setAnimationSpeed(value) {
+            animationSpeed = value;
+            console.log(`⚡ Скорость анимации: ${animationSpeed}`);
+            playAnimation(currentAnimation);
+        }
+
+        // Симуляция FPS
+        function simulateFPS() {
+            if (isReady) {
+                const fps = Math.floor(Math.random() * 30) + 30; // 30-60 FPS
+                sendMessageToParent({ type: 'FPS', fps: fps });
+            }
+        }
+
+        // Запуск симуляции FPS
+        setInterval(simulateFPS, 1000);
+
+        // Полноэкранный режим
+        function SetFullscreen(flag) {
+            if (flag) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Обработка ошибок
+        window.addEventListener('error', function(event) {
+            console.error('❌ Ошибка Unity:', event.error);
+            sendMessageToParent({ type: 'UnityError', message: event.error.message });
+        });
+
+        console.log('🎮 Unity WebGL заглушка загружена');
+        
+        // Автоматически инициализируем Unity при загрузке
+        window.addEventListener('load', function() {
+            console.log('📱 Страница загружена, инициализируем Unity...');
+            initUnity();
+        });
+        
+        // Также инициализируем сразу, если страница уже загружена
+        if (document.readyState === 'complete') {
+            console.log('📱 Страница уже загружена, инициализируем Unity...');
+            initUnity();
+        }
+        
+        // Fallback - отправляем UnityReady через 3 секунды в любом случае
+        setTimeout(() => {
+            if (!isReady) {
+                console.log('⚠️ Fallback: отправляем UnityReady принудительно');
+                isReady = true;
+                sendMessageToParent({ type: 'UnityReady' });
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
