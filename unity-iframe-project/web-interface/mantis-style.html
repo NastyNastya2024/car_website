@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WE CREATE FEELINGS</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* Кастомный курсор */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+        
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.15s ease;
+        }
+        
+        /* Фиксированная 3D сцена */
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+        }
+        
+        /* Контент страницы */
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Hero секция */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+        
+        .hero .subtitle {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: 300;
+            opacity: 0.7;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeInUp 1s ease 1.5s forwards;
+        }
+        
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, #fff, transparent);
+            margin: 0 auto;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+        
+        /* Секции */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            position: relative;
+        }
+        
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .section h2 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        .section p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            font-weight: 300;
+            line-height: 1.6;
+            opacity: 0.8;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        /* Анимированные числа */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 200;
+            display: block;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        /* Интерактивные элементы */
+        .interactive-text {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-text:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Плавающие элементы */
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+        
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        /* Загрузка */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+        }
+        
+        .loading-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 1px;
+            overflow: hidden;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, #666);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Анимации */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .section {
+                padding: 0 5%;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+        
+        /* Эффекты при скролле */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Специальные эффекты */
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            animation: glitch-1 0.5s infinite;
+            color: #ff0000;
+            z-index: -1;
+        }
+        
+        .glitch::after {
+            animation: glitch-2 0.5s infinite;
+            color: #00ff00;
+            z-index: -2;
+        }
+        
+        @keyframes glitch-1 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+        
+        @keyframes glitch-2 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-2px, 2px); }
+            80% { transform: translate(-2px, -2px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Кастомный курсор -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Загрузка -->
+    <div class="loading" id="loading">
+        <div class="loading-text">WE CREATE FEELINGS</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+    </div>
+
+    <!-- 3D Сцена -->
+    <div id="scene-container"></div>
+
+    <!-- Контент -->
+    <div class="content">
+        <!-- Hero секция -->
+        <section class="hero">
+            <h1 class="glitch" data-text="WE CREATE FEELINGS">WE CREATE FEELINGS</h1>
+            <p class="subtitle">Great design doesn't just guide behavior.<br>It speaks directly to the nervous system.</p>
+            <div class="scroll-indicator">
+                <div class="scroll-line"></div>
+            </div>
+            
+            <!-- Плавающие элементы -->
+            <div class="floating-element">❥</div>
+            <div class="floating-element">∞</div>
+            <div class="floating-element">◊</div>
+        </section>
+
+        <!-- Секция 1 -->
+        <section class="section">
+            <div class="section-content">
+                <h2 class="reveal">we<br><span class="interactive-text">activate</span><br>nerves.</h2>
+                <p class="reveal">There's a better way. With collective experience in digital experiences, we've seen it all. We believe that marrying best in class creative and production delivers better work, more smoothly, with more impact.</p>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number reveal" data-target="30">0</span>
+                        <div class="stat-label reveal">Years Experience</div>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number reveal" data-target="100">0</span>
+                        <div class="stat-label reveal">Projects Delivered</div>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number reveal" data-target="26">0</span>
+                        <div class="stat-label reveal">Awards Won</div>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number reveal" data-target="∞">0</span>
+                        <div class="stat-label reveal">Possibilities</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция 2 -->
+        <section class="section">
+            <div class="section-content">
+                <h2 class="reveal">we<br><span class="interactive-text">stimulate</span><br>memory.</h2>
+                <p class="reveal">We've created experiences for the world's most impactful brands. The industry has taken note. Our work speaks directly to emotions, creating lasting impressions that resonate long after the interaction ends.</p>
+            </div>
+        </section>
+
+        <!-- Секция 3 -->
+        <section class="section">
+            <div class="section-content">
+                <h2 class="reveal">we<br><span class="interactive-text">excite</span><br>neurons.</h2>
+                <p class="reveal">Every interaction is designed to create a visceral response. We don't just build interfaces – we craft experiences that make your heart race and your mind expand. This is design that moves you.</p>
+            </div>
+        </section>
+
+        <!-- Финальная секция -->
+        <section class="section">
+            <div class="section-content">
+                <h2 class="reveal">Let's build your next<br><span class="interactive-text">experiential</span><br>project together.</h2>
+                <p class="reveal">Ready to create something that moves people? Let's talk about how we can bring your vision to life with technology that touches the soul.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Локальные библиотеки Three.js -->
+    <script src="libs/fflate.min.js"></script>
+    <script src="libs/three.min.js"></script>
+    <script src="libs/FBXLoader.js"></script>
+    <script src="libs/OrbitControls.js"></script>
+
+    <script>
+        let scene, camera, renderer, controls, mixer, clock = { getDelta: () => 0.016 };
+        let model;
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+        let scrollY = 0;
+        let isLoaded = false;
+
+        // Кастомный курсор
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        // Позиции камеры для разных эмоций
+        const cameraPositions = [
+            { x: 2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } },      // Спокойствие
+            { x: 0, y: 3, z: 2, lookAt: { x: 0, y: 0, z: 0 } },      // Восхищение
+            { x: -2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } },     // Интрига
+            { x: 0, y: 0.5, z: 4, lookAt: { x: 0, y: 0, z: 0 } },     // Близость
+            { x: 3, y: 2, z: 1, lookAt: { x: 0, y: 0, z: 0 } },      // Энергия
+            { x: 2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } }       // Возврат
+        ];
+
+        function updateLoadingProgress(percent) {
+            document.getElementById('loadingProgress').style.width = percent + '%';
+        }
+
+        function init() {
+            console.log('🎮 Инициализация эмоциональной 3D сцены...');
+            updateLoadingProgress(20);
+            
+            // Проверяем библиотеки
+            if (typeof THREE === 'undefined') {
+                console.error('Three.js не загружен');
+                return;
+            }
+            
+            updateLoadingProgress(40);
+            
+            // Создаем сцену
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+            
+            // Создаем камеру
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(2, 1, 3);
+            
+            // Создаем рендерер
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            document.getElementById('scene-container').appendChild(renderer.domElement);
+            
+            updateLoadingProgress(60);
+            
+            // Создаем контроллеры камеры
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.maxPolarAngle = Math.PI / 2;
+            controls.minDistance = 1;
+            controls.maxDistance = 8;
+            
+            // Добавляем драматическое освещение
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+            directionalLight.position.set(5, 10, 7.5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+            
+            // Добавляем цветные источники света для атмосферы
+            const light1 = new THREE.PointLight(0xff6b6b, 0.5, 10);
+            light1.position.set(2, 2, 2);
+            scene.add(light1);
+            
+            const light2 = new THREE.PointLight(0x4ecdc4, 0.5, 10);
+            light2.position.set(-2, 1, 2);
+            scene.add(light2);
+            
+            updateLoadingProgress(80);
+            
+            // Загружаем модель
+            loadFBXModel();
+            
+            // Настраиваем обработчики событий
+            setupEventListeners();
+            
+            // Запускаем анимационный цикл
+            animate();
+            
+            // Обработка изменения размера окна
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function loadFBXModel() {
+            console.log('📥 Загрузка танцующей фигуры...');
+            
+            const loader = new THREE.FBXLoader();
+            
+            loader.load(
+                'models/Dancing Twerk.fbx',
+                (fbx) => {
+                    console.log('✅ Модель загружена');
+                    
+                    model = fbx;
+                    
+                    // Настраиваем модель
+                    fbx.scale.setScalar(0.01);
+                    fbx.position.set(0, 0, 0);
+                    
+                    // Включаем тени и настраиваем материалы
+                    fbx.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            
+                            // Добавляем эффекты к материалам
+                            if (child.material) {
+                                child.material.metalness = 0.3;
+                                child.material.roughness = 0.7;
+                            }
+                        }
+                    });
+                    
+                    scene.add(fbx);
+                    
+                    // Настраиваем анимации
+                    if (fbx.animations.length > 0) {
+                        mixer = new THREE.AnimationMixer(fbx);
+                        const action = mixer.clipAction(fbx.animations[0]);
+                        action.setLoop(THREE.LoopRepeat, Infinity);
+                        action.play();
+                        console.log('🎬 Эмоциональная анимация запущена');
+                    }
+                    
+                    updateLoadingProgress(100);
+                    
+                    // Скрываем загрузку
+                    setTimeout(() => {
+                        document.getElementById('loading').classList.add('hidden');
+                        isLoaded = true;
+                        console.log('🎉 Эмоциональный опыт готов!');
+                    }, 1000);
+                },
+                (progress) => {
+                    if (progress.total > 0) {
+                        const percent = Math.round(80 + (progress.loaded / progress.total) * 20);
+                        updateLoadingProgress(percent);
+                    }
+                },
+                (error) => {
+                    console.error('❌ Ошибка загрузки:', error);
+                }
+            );
+        }
+
+        function setupEventListeners() {
+            // Кастомный курсор
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                cursor.style.left = mouseX + 'px';
+                cursor.style.top = mouseY + 'px';
+                
+                targetX = e.clientX;
+                targetY = e.clientY;
+            });
+            
+            // Эффекты при наведении
+            document.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+            });
+            
+            document.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+            });
+            
+            // Скролл для облета камеры
+            window.addEventListener('scroll', () => {
+                scrollY = window.pageYOffset;
+                updateCameraPosition();
+            });
+            
+            // Интерактивные элементы
+            document.querySelectorAll('.interactive-text').forEach(element => {
+                element.addEventListener('mouseenter', () => {
+                    cursor.style.transform = 'scale(2)';
+                    cursor.style.background = '#ff6b6b';
+                });
+                
+                element.addEventListener('mouseleave', () => {
+                    cursor.style.transform = 'scale(1)';
+                    cursor.style.background = '#fff';
+                });
+            });
+        }
+
+        function updateCameraPosition() {
+            if (!isLoaded) return;
+            
+            const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollProgress = Math.min(scrollY / documentHeight, 1);
+            
+            // Вычисляем позицию камеры
+            const totalPositions = cameraPositions.length - 1;
+            const positionIndex = scrollProgress * totalPositions;
+            const currentIndex = Math.floor(positionIndex);
+            const nextIndex = Math.min(currentIndex + 1, totalPositions);
+            const t = positionIndex - currentIndex;
+            
+            // Плавная интерполяция
+            const currentPos = cameraPositions[currentIndex];
+            const nextPos = cameraPositions[nextIndex];
+            
+            camera.position.x = THREE.MathUtils.lerp(currentPos.x, nextPos.x, t);
+            camera.position.y = THREE.MathUtils.lerp(currentPos.y, nextPos.y, t);
+            camera.position.z = THREE.MathUtils.lerp(currentPos.z, nextPos.z, t);
+            
+            camera.lookAt(
+                THREE.MathUtils.lerp(currentPos.lookAt.x, nextPos.lookAt.x, t),
+                THREE.MathUtils.lerp(currentPos.lookAt.y, nextPos.lookAt.y, t),
+                THREE.MathUtils.lerp(currentPos.lookAt.z, nextPos.lookAt.z, t)
+            );
+            
+            camera.updateProjectionMatrix();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Обновляем курсор-фолловер
+            cursorFollower.style.left = targetX + 'px';
+            cursorFollower.style.top = targetY + 'px';
+            
+            // Обновляем контроллеры
+            if (controls) {
+                controls.update();
+            }
+            
+            // Обновляем анимации
+            if (mixer) {
+                mixer.update(clock.getDelta());
+            }
+            
+            // Рендерим сцену
+            if (renderer && scene && camera) {
+                renderer.render(scene, camera);
+            }
+        }
+
+        function onWindowResize() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        // Анимация появления элементов при скролле
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            reveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        // Анимация чисел
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number[data-target]');
+            
+            numbers.forEach(number => {
+                const target = parseInt(number.getAttribute('data-target'));
+                const current = parseInt(number.textContent) || 0;
+                
+                if (current < target) {
+                    const increment = Math.ceil(target / 50);
+                    number.textContent = Math.min(current + increment, target);
+                }
+            });
+        }
+
+        // Обработчики событий
+        window.addEventListener('scroll', () => {
+            revealOnScroll();
+            animateNumbers();
+        });
+
+        // Запуск приложения
+        window.addEventListener('load', () => {
+            console.log('📱 Эмоциональный опыт загружается...');
+            
+            setTimeout(() => {
+                init();
+                revealOnScroll();
+            }, 200);
+        });
+    </script>
+</body>
+</html>

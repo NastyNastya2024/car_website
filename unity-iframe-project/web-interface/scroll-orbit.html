@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Танцующая фигура - Интерактивный просмотр</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Фиксированная 3D сцена */
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        /* Контент страницы */
+        .content {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.95);
+            margin: 50vh 0;
+            padding: 80px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section {
+            padding: 100px 0;
+            margin: 50px 0;
+        }
+        
+        .section h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .section h3 {
+            font-size: 1.8rem;
+            margin: 20px 0 15px 0;
+            color: #2980b9;
+        }
+        
+        .section p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: justify;
+            color: #555;
+        }
+        
+        .bullet-list {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+        
+        .bullet-list li {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #555;
+            position: relative;
+        }
+        
+        .bullet-list li::before {
+            content: "🎯";
+            position: absolute;
+            left: -25px;
+            top: 0;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .highlight-box h3 {
+            color: white;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 5px solid #3498db;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 1000;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden { display: none; }
+        
+        .progress-bar {
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px auto;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #51cf66, #69db7c);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .section h1 { font-size: 2rem; }
+            .section h2 { font-size: 1.8rem; }
+            .section p { font-size: 1rem; }
+            .container { padding: 0 15px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Загрузка -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div>Загрузка танцующей фигуры...</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress">0%</div>
+        </div>
+    </div>
+
+    <!-- 3D Сцена -->
+    <div id="scene-container"></div>
+
+    <!-- Контент страницы -->
+    <div class="content">
+        <div class="container">
+            <!-- Введение -->
+            <section class="section">
+                <h1>Танцующая Фигура</h1>
+                <p>Добро пожаловать в интерактивный мир 3D анимации! Эта страница демонстрирует возможности современной веб-технологии Three.js для создания захватывающих визуальных эффектов.</p>
+                
+                <div class="highlight-box">
+                    <h3>🎭 Особенности модели</h3>
+                    <p>Наша танцующая фигура создана с использованием передовых технологий 3D моделирования и анимации. При прокрутке страницы вы сможете рассмотреть её с разных ракурсов.</p>
+                </div>
+            </section>
+
+            <!-- Технические характеристики -->
+            <section class="section">
+                <h2>Технические характеристики</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">60</span>
+                        <div class="stat-label">FPS анимации</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2048</span>
+                        <div class="stat-label">Текстуры высокого качества</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">360°</span>
+                        <div class="stat-label">Обзор во всех направлениях</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">100%</span>
+                        <div class="stat-label">Интерактивность</div>
+                    </div>
+                </div>
+
+                <h3>🎨 Графические возможности</h3>
+                <ul class="bullet-list">
+                    <li>Реалистичное освещение с тенями</li>
+                    <li>Плавные анимации без задержек</li>
+                    <li>Адаптивное качество под устройство</li>
+                    <li>Оптимизация для мобильных устройств</li>
+                </ul>
+            </section>
+
+            <!-- Анимация -->
+            <section class="section">
+                <h2>Система анимации</h2>
+                <p>Наша танцующая фигура использует продвинутую систему анимации, которая обеспечивает плавные и естественные движения.</p>
+                
+                <h3>🎬 Типы анимации</h3>
+                <ul class="bullet-list">
+                    <li>Танцевальные движения с ритмом</li>
+                    <li>Плавные переходы между позами</li>
+                    <li>Циклические анимации без разрывов</li>
+                    <li>Адаптация к скорости воспроизведения</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h3>⚡ Производительность</h3>
+                    <p>Все анимации оптимизированы для работы в браузере и не требуют дополнительных плагинов. Система автоматически адаптируется к возможностям вашего устройства.</p>
+                </div>
+            </section>
+
+            <!-- Освещение -->
+            <section class="section">
+                <h2>Система освещения</h2>
+                <p>Продвинутая система освещения создает реалистичные тени и подчеркивает детали модели.</p>
+                
+                <h3>💡 Источники света</h3>
+                <ul class="bullet-list">
+                    <li>Направленный свет для основных теней</li>
+                    <li>Рассеянное освещение для мягкости</li>
+                    <li>Динамические тени в реальном времени</li>
+                    <li>Адаптивная яркость под контент</li>
+                </ul>
+            </section>
+
+            <!-- Интерактивность -->
+            <section class="section">
+                <h2>Интерактивные возможности</h2>
+                <p>Страница полностью интерактивна - вы можете управлять просмотром с помощью мыши и клавиатуры.</p>
+                
+                <h3>🖱️ Управление</h3>
+                <ul class="bullet-list">
+                    <li>Прокрутка страницы для облета камеры</li>
+                    <li>Перетаскивание мышью для ручного управления</li>
+                    <li>Масштабирование колесиком мыши</li>
+                    <li>Автоматическое возвращение к позиции</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h3>🎯 Советы по использованию</h3>
+                    <p>Для лучшего опыта просмотра используйте прокрутку страницы - камера будет плавно облетать модель, показывая её с разных ракурсов. Вы также можете использовать мышь для ручного управления камерой.</p>
+                </div>
+            </section>
+
+            <!-- Заключение -->
+            <section class="section">
+                <h2>Заключение</h2>
+                <p>Эта демонстрация показывает возможности современного веб-разработки в области 3D графики. Технологии Three.js позволяют создавать интерактивные и захватывающие визуальные эффекты прямо в браузере.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">3D</span>
+                        <div class="stat-label">Технология</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">WebGL</span>
+                        <div class="stat-label">Рендеринг</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">JS</span>
+                        <div class="stat-label">Программирование</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">∞</span>
+                        <div class="stat-label">Возможности</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Локальные библиотеки Three.js -->
+    <script src="libs/fflate.min.js"></script>
+    <script src="libs/three.min.js"></script>
+    <script src="libs/FBXLoader.js"></script>
+    <script src="libs/OrbitControls.js"></script>
+
+    <script>
+        let scene, camera, renderer, controls, mixer, clock = { getDelta: () => 0.016 };
+        let model;
+        let isScrolling = false;
+        let scrollProgress = 0;
+
+        // Позиции камеры для разных ракурсов
+        const cameraPositions = [
+            { x: 3, y: 2, z: 3, lookAt: { x: 0, y: 0, z: 0 } },      // Фронтальный вид
+            { x: 0, y: 3, z: 3, lookAt: { x: 0, y: 0, z: 0 } },      // Вид сверху
+            { x: -3, y: 2, z: 3, lookAt: { x: 0, y: 0, z: 0 } },     // Боковой вид
+            { x: 0, y: 1, z: 5, lookAt: { x: 0, y: 0, z: 0 } },      // Дальний вид
+            { x: 2, y: 1, z: -2, lookAt: { x: 0, y: 0, z: 0 } },     // Задний вид
+            { x: 3, y: 2, z: 3, lookAt: { x: 0, y: 0, z: 0 } }       // Возврат к началу
+        ];
+
+        function updateProgress(percent, message) {
+            document.getElementById('progress').style.width = percent + '%';
+            document.getElementById('progress').textContent = percent + '%';
+            console.log(`📊 ${message} (${percent}%)`);
+        }
+
+        function showError(message) {
+            document.getElementById('loading').innerHTML = 
+                '<div style="color: #ff6b6b;">❌ ' + message + '</div>' +
+                '<div style="margin-top: 10px; font-size: 12px;">Проверьте консоль для деталей</div>';
+        }
+
+        function showSuccess(message) {
+            document.getElementById('loading').innerHTML = 
+                '<div style="color: #51cf66;">✅ ' + message + '</div>' +
+                '<div style="margin-top: 10px; font-size: 12px;">Готово! Прокрутите страницу для облета модели</div>';
+        }
+
+        function init() {
+            console.log('🎮 Инициализация 3D сцены...');
+            updateProgress(20, 'Проверка библиотек');
+            
+            // Проверяем все необходимые библиотеки
+            if (typeof fflate === 'undefined') {
+                showError('fflate не загружен');
+                return;
+            }
+            
+            if (typeof THREE === 'undefined') {
+                showError('Three.js не загружен');
+                return;
+            }
+            
+            if (typeof THREE.FBXLoader === 'undefined') {
+                showError('FBXLoader не загружен');
+                return;
+            }
+            
+            if (typeof THREE.OrbitControls === 'undefined') {
+                showError('OrbitControls не загружен');
+                return;
+            }
+            
+            console.log('✅ Все библиотеки загружены успешно');
+            updateProgress(40, 'Создание сцены');
+            
+            // Создаем сцену
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xF5F7FA);
+            
+            // Создаем камеру
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(3, 2, 3);
+            
+            // Создаем рендерер
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('scene-container').appendChild(renderer.domElement);
+            
+            updateProgress(60, 'Настройка освещения');
+            
+            // Создаем контроллеры камеры
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.maxPolarAngle = Math.PI / 2;
+            controls.minDistance = 1;
+            controls.maxDistance = 10;
+            
+            // Добавляем освещение
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            directionalLight.position.set(5, 10, 7.5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 50;
+            directionalLight.shadow.camera.left = -10;
+            directionalLight.shadow.camera.right = 10;
+            directionalLight.shadow.camera.top = 10;
+            directionalLight.shadow.camera.bottom = -10;
+            scene.add(directionalLight);
+            
+            updateProgress(80, 'Загрузка модели');
+            
+            // Загружаем FBX модель
+            loadFBXModel();
+            
+            // Настраиваем обработчики событий
+            setupEventListeners();
+            
+            // Запускаем анимационный цикл
+            animate();
+            
+            // Обработка изменения размера окна
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function loadFBXModel() {
+            console.log('📥 Загрузка FBX модели...');
+            
+            const loader = new THREE.FBXLoader();
+            
+            loader.load(
+                'models/Dancing Twerk.fbx',
+                (fbx) => {
+                    console.log('✅ Модель загружена:', fbx);
+                    
+                    model = fbx;
+                    
+                    // Настраиваем модель
+                    fbx.scale.setScalar(0.01);
+                    fbx.position.set(0, 0, 0);
+                    
+                    // Включаем тени
+                    fbx.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+                    
+                    scene.add(fbx);
+                    
+                    // Настраиваем анимации
+                    if (fbx.animations.length > 0) {
+                        mixer = new THREE.AnimationMixer(fbx);
+                        const action = mixer.clipAction(fbx.animations[0]);
+                        action.setLoop(THREE.LoopRepeat, Infinity);
+                        action.play();
+                        console.log('🎬 Анимация запущена');
+                    }
+                    
+                    updateProgress(100, 'Загрузка завершена');
+                    
+                    // Скрываем загрузку
+                    setTimeout(() => {
+                        document.getElementById('loading').classList.add('hidden');
+                        showSuccess('Модель загружена успешно!');
+                    }, 1000);
+                },
+                (progress) => {
+                    if (progress.total > 0) {
+                        const percent = Math.round(80 + (progress.loaded / progress.total) * 20);
+                        updateProgress(percent, 'Загрузка модели');
+                    }
+                },
+                (error) => {
+                    console.error('❌ Ошибка загрузки FBX:', error);
+                    showError('Ошибка загрузки FBX: ' + error.message);
+                }
+            );
+        }
+
+        function setupEventListeners() {
+            // Обработчик скролла
+            window.addEventListener('scroll', () => {
+                if (isScrolling) return;
+                
+                isScrolling = true;
+                requestAnimationFrame(updateCameraPosition);
+            });
+
+            // Обработчик изменения размера окна
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function updateCameraPosition() {
+            const scrollTop = window.pageYOffset;
+            const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+            scrollProgress = Math.min(scrollTop / documentHeight, 1);
+            
+            // Вычисляем текущую позицию камеры на основе прогресса скролла
+            const totalPositions = cameraPositions.length - 1;
+            const positionIndex = scrollProgress * totalPositions;
+            const currentIndex = Math.floor(positionIndex);
+            const nextIndex = Math.min(currentIndex + 1, totalPositions);
+            const t = positionIndex - currentIndex;
+            
+            // Интерполяция между позициями
+            const currentPos = cameraPositions[currentIndex];
+            const nextPos = cameraPositions[nextIndex];
+            
+            camera.position.x = THREE.MathUtils.lerp(currentPos.x, nextPos.x, t);
+            camera.position.y = THREE.MathUtils.lerp(currentPos.y, nextPos.y, t);
+            camera.position.z = THREE.MathUtils.lerp(currentPos.z, nextPos.z, t);
+            
+            // Обновляем направление взгляда
+            camera.lookAt(
+                THREE.MathUtils.lerp(currentPos.lookAt.x, nextPos.lookAt.x, t),
+                THREE.MathUtils.lerp(currentPos.lookAt.y, nextPos.lookAt.y, t),
+                THREE.MathUtils.lerp(currentPos.lookAt.z, nextPos.lookAt.z, t)
+            );
+            
+            camera.updateProjectionMatrix();
+            
+            isScrolling = false;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (controls) {
+                controls.update();
+            }
+            
+            if (mixer) {
+                mixer.update(clock.getDelta());
+            }
+            
+            if (renderer && scene && camera) {
+                renderer.render(scene, camera);
+            }
+        }
+
+        function onWindowResize() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        // Запуск приложения
+        window.addEventListener('load', () => {
+            console.log('📱 Страница загружена, инициализация...');
+            
+            setTimeout(() => {
+                init();
+            }, 200);
+        });
+    </script>
+</body>
+</html>
