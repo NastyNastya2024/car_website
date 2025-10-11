@@ -272,11 +272,6 @@
             50% { transform: translateY(-20px) rotate(5deg); }
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
         /* Адаптивность */
         @media (max-width: 768px) {
             .hero h1 {
@@ -577,6 +572,7 @@
                         mixer = new THREE.AnimationMixer(fbx);
                         const action = mixer.clipAction(fbx.animations[0]);
                         action.setLoop(THREE.LoopRepeat, Infinity);
+                        action.timeScale = 1.0; // Нормальная скорость анимации
                         action.play();
                         console.log('🎬 Эмоциональная анимация запущена');
                     }

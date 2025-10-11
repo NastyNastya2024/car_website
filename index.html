@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+        }
+        
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .nav-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+        
+        .nav-card p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>3D Model Viewer</h1>
+        <p class="subtitle">Интерактивные 3D модели и анимации</p>
+        
+        <div class="nav-grid">
+            <a href="unity-iframe-project/web-interface/index.html" class="nav-card">
+                <span class="icon">🎭</span>
+                <h3>Базовая модель</h3>
+                <p>Простой просмотр танцующей фигуры с базовыми элементами управления</p>
+            </a>
+            
+            <a href="unity-iframe-project/web-interface/scroll-orbit.html" class="nav-card">
+                <span class="icon">🔄</span>
+                <h3>Минимальная версия</h3>
+                <p>Только танцующая фигура без лишних элементов</p>
+            </a>
+            
+            <a href="unity-iframe-project/web-interface/mantis-style.html" class="nav-card">
+                <span class="icon">✨</span>
+                <h3>Эмоциональный дизайн</h3>
+                <p>Стиль Mantis Works с драматическими эффектами и интерактивностью</p>
+            </a>
+            
+            <a href="unity-iframe-project/unity-build/index.html" class="nav-card">
+                <span class="icon">🎮</span>
+                <h3>Unity версия</h3>
+                <p>Оригинальная Unity WebGL версия с полным функционалом</p>
+            </a>
+        </div>
+        
+        <div class="status">
+            ✅ Сайт успешно опубликован на GitHub Pages<br>
+            📱 Все версии доступны и работают корректно
+        </div>
+    </div>
+</body>
+</html>
