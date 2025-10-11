@@ -557,10 +557,11 @@
                             child.castShadow = true;
                             child.receiveShadow = true;
                             
-                            // Добавляем эффекты к материалам
+                            // Изменяем цвет существующего материала на белый
                             if (child.material) {
-                                child.material.metalness = 0.3;
-                                child.material.roughness = 0.7;
+                                child.material.color.setHex(0xffffff);
+                                child.material.metalness = 0.1;
+                                child.material.roughness = 0.8;
                             }
                         }
                     });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WE CREATE FEELINGS</title>
+    <title>MVP Development Cycle</title>
     <style>
         * { 
             margin: 0; 
@@ -13,8 +13,8 @@
         
         body { 
             font-family: 'Arial', sans-serif;
-            background: #000;
-            color: #fff;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+            color: #2c3e50;
             overflow-x: hidden;
             cursor: none;
         }
@@ -24,7 +24,7 @@
             position: fixed;
             width: 20px;
             height: 20px;
-            background: #fff;
+            background: #2c3e50;
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
@@ -36,7 +36,7 @@
             position: fixed;
             width: 40px;
             height: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(44, 62, 80, 0.3);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9998;
@@ -51,7 +51,7 @@
             width: 100%;
             height: 100vh;
             z-index: -1;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
         }
         
         /* Контент страницы */
@@ -80,6 +80,7 @@
             opacity: 0;
             transform: translateY(50px);
             animation: fadeInUp 1s ease 0.5s forwards;
+            color: #2c3e50;
         }
         
         .hero .subtitle {
@@ -90,6 +91,7 @@
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 1s ease 1s forwards;
+            color: #6c757d;
         }
         
         .scroll-indicator {
@@ -104,7 +106,7 @@
         .scroll-line {
             width: 1px;
             height: 60px;
-            background: linear-gradient(to bottom, #fff, transparent);
+            background: linear-gradient(to bottom, #2c3e50, transparent);
             margin: 0 auto;
             animation: scrollPulse 2s ease-in-out infinite;
         }
@@ -132,6 +134,7 @@
             margin-bottom: 2rem;
             opacity: 0;
             transform: translateY(50px);
+            color: #2c3e50;
         }
         
         .section p {
@@ -142,36 +145,94 @@
             max-width: 600px;
             opacity: 0;
             transform: translateY(30px);
+            color: #6c757d;
         }
         
-        /* Анимированные числа */
-        .stats {
+        /* Карточки услуг */
+        .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem;
-            margin: 4rem 0;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
         }
         
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: clamp(3rem, 6vw, 5rem);
-            font-weight: 200;
-            display: block;
-            margin-bottom: 0.5rem;
+        .service-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
             opacity: 0;
             transform: translateY(30px);
         }
         
-        .stat-label {
-            font-size: 1rem;
-            opacity: 0.6;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            opacity: 0;
-            transform: translateY(20px);
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-weight: 400;
+        }
+        
+        .service-card p {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .service-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .service-card li {
+            padding: 0.5rem 0;
+            color: #6c757d;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .service-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        /* Примеры */
+        .examples {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .examples h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .examples ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .examples li {
+            padding: 0.3rem 0;
+            color: #6c757d;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+        
+        .examples li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #007bff;
+            font-weight: bold;
         }
         
         /* Интерактивные элементы */
@@ -180,11 +241,12 @@
             display: inline-block;
             cursor: pointer;
             transition: all 0.3s ease;
+            color: #007bff;
         }
         
         .interactive-text:hover {
             transform: scale(1.05);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
         }
         
         /* Плавающие элементы */
@@ -192,6 +254,7 @@
             position: absolute;
             opacity: 0.1;
             animation: float 6s ease-in-out infinite;
+            color: #6c757d;
         }
         
         .floating-element:nth-child(1) {
@@ -219,7 +282,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -237,19 +300,20 @@
             font-size: 1.2rem;
             margin-bottom: 2rem;
             opacity: 0.7;
+            color: #2c3e50;
         }
         
         .loading-bar {
             width: 200px;
             height: 2px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(44, 62, 80, 0.2);
             border-radius: 1px;
             overflow: hidden;
         }
         
         .loading-progress {
             height: 100%;
-            background: linear-gradient(90deg, #fff, #666);
+            background: linear-gradient(90deg, #007bff, #28a745);
             width: 0%;
             transition: width 0.3s ease;
         }
@@ -272,11 +336,6 @@
             50% { transform: translateY(-20px) rotate(5deg); }
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
         /* Адаптивность */
         @media (max-width: 768px) {
             .hero h1 {
@@ -287,9 +346,8 @@
                 padding: 0 5%;
             }
             
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2rem;
+            .services-grid {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -306,46 +364,24 @@
         }
         
         /* Специальные эффекты */
-        .glitch {
-            position: relative;
+        .highlight-box {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.2);
         }
         
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
         }
         
-        .glitch::before {
-            animation: glitch-1 0.5s infinite;
-            color: #ff0000;
-            z-index: -1;
-        }
-        
-        .glitch::after {
-            animation: glitch-2 0.5s infinite;
-            color: #00ff00;
-            z-index: -2;
-        }
-        
-        @keyframes glitch-1 {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-        }
-        
-        @keyframes glitch-2 {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(2px, 2px); }
-            40% { transform: translate(2px, -2px); }
-            60% { transform: translate(-2px, 2px); }
-            80% { transform: translate(-2px, -2px); }
+        .highlight-box p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0;
         }
     </style>
 </head>
@@ -356,7 +392,7 @@
 
     <!-- Загрузка -->
     <div class="loading" id="loading">
-        <div class="loading-text">WE CREATE FEELINGS</div>
+        <div class="loading-text">MVP Development Cycle</div>
         <div class="loading-bar">
             <div class="loading-progress" id="loadingProgress"></div>
         </div>
@@ -369,66 +405,223 @@
     <div class="content">
         <!-- Hero секция -->
         <section class="hero">
-            <h1 class="glitch" data-text="WE CREATE FEELINGS">WE CREATE FEELINGS</h1>
-            <p class="subtitle">Great design doesn't just guide behavior.<br>It speaks directly to the nervous system.</p>
+            <h1>MVP<br>Development<br>Cycle</h1>
+            <p class="subtitle">Полный цикл создания MVP продукта<br>от анализа до маркетинга</p>
             <div class="scroll-indicator">
                 <div class="scroll-line"></div>
             </div>
             
             <!-- Плавающие элементы -->
-            <div class="floating-element">❥</div>
-            <div class="floating-element">∞</div>
-            <div class="floating-element">◊</div>
+            <div class="floating-element">📊</div>
+            <div class="floating-element">🎨</div>
+            <div class="floating-element">💻</div>
         </section>
 
-        <!-- Секция 1 -->
+        <!-- Аналитика -->
         <section class="section">
             <div class="section-content">
-                <h2 class="reveal">we<br><span class="interactive-text">activate</span><br>nerves.</h2>
-                <p class="reveal">There's a better way. With collective experience in digital experiences, we've seen it all. We believe that marrying best in class creative and production delivers better work, more smoothly, with more impact.</p>
+                <h2 class="reveal">Аналитика<br><span class="interactive-text">исследования</span><br>рынка</h2>
+                <p class="reveal">Глубокий анализ рынка и создание концепции архитектуры продукта на основе данных о целевой аудитории.</p>
                 
-                <div class="stats">
-                    <div class="stat">
-                        <span class="stat-number reveal" data-target="30">0</span>
-                        <div class="stat-label reveal">Years Experience</div>
+                <div class="services-grid">
+                    <div class="service-card reveal">
+                        <h3>📊 Аналитика рынка</h3>
+                        <p>Комплексное исследование конкурентной среды и рыночных возможностей</p>
+                        <ul>
+                            <li>Анализ конкурентов</li>
+                            <li>Исследование трендов</li>
+                            <li>SWOT-анализ</li>
+                            <li>Определение ниши</li>
+                        </ul>
                     </div>
-                    <div class="stat">
-                        <span class="stat-number reveal" data-target="100">0</span>
-                        <div class="stat-label reveal">Projects Delivered</div>
+                    
+                    <div class="service-card reveal">
+                        <h3>🏗️ Архитектура продукта</h3>
+                        <p>Создание технической концепции и архитектуры будущего продукта</p>
+                        <ul>
+                            <li>Техническое планирование</li>
+                            <li>Выбор технологий</li>
+                            <li>Создание MVP roadmap</li>
+                            <li>Оценка ресурсов</li>
+                        </ul>
                     </div>
-                    <div class="stat">
-                        <span class="stat-number reveal" data-target="26">0</span>
-                        <div class="stat-label reveal">Awards Won</div>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number reveal" data-target="∞">0</span>
-                        <div class="stat-label reveal">Possibilities</div>
+                    
+                    <div class="service-card reveal">
+                        <h3>👥 Исследование аудитории</h3>
+                        <p>Детальное изучение потребностей и поведения целевых пользователей</p>
+                        <ul>
+                            <li>Персоны пользователей</li>
+                            <li>Customer Journey Map</li>
+                            <li>Интервью и опросы</li>
+                            <li>Анализ поведения</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Секция 2 -->
+        <!-- Дизайн -->
         <section class="section">
             <div class="section-content">
-                <h2 class="reveal">we<br><span class="interactive-text">stimulate</span><br>memory.</h2>
-                <p class="reveal">We've created experiences for the world's most impactful brands. The industry has taken note. Our work speaks directly to emotions, creating lasting impressions that resonate long after the interaction ends.</p>
+                <h2 class="reveal">Дизайн<br><span class="interactive-text">прототипирование</span><br>продуктов</h2>
+                <p class="reveal">Создание интуитивных интерфейсов и пользовательского опыта для цифровых продуктов.</p>
+                
+                <div class="services-grid">
+                    <div class="service-card reveal">
+                        <h3>📱 Мобильные приложения</h3>
+                        <p>Дизайн нативных и кроссплатформенных мобильных приложений</p>
+                        <div class="examples">
+                            <h4>Примеры работ:</h4>
+                            <ul>
+                                <li>E-commerce приложения</li>
+                                <li>Финтех решения</li>
+                                <li>Социальные платформы</li>
+                                <li>Образовательные приложения</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card reveal">
+                        <h3>🌐 Веб-сайты</h3>
+                        <p>Создание современных веб-интерфейсов и пользовательского опыта</p>
+                        <div class="examples">
+                            <h4>Примеры работ:</h4>
+                            <ul>
+                                <li>Корпоративные сайты</li>
+                                <li>Интернет-магазины</li>
+                                <li>Порталы и дашборды</li>
+                                <li>Landing pages</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card reveal">
+                        <h3>🎨 UI/UX дизайн</h3>
+                        <p>Прототипирование и создание дизайн-систем</p>
+                        <div class="examples">
+                            <h4>Услуги:</h4>
+                            <ul>
+                                <li>Wireframing</li>
+                                <li>Прототипирование</li>
+                                <li>Дизайн-системы</li>
+                                <li>Usability тестирование</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Секция 3 -->
+        <!-- Разработка -->
         <section class="section">
             <div class="section-content">
-                <h2 class="reveal">we<br><span class="interactive-text">excite</span><br>neurons.</h2>
-                <p class="reveal">Every interaction is designed to create a visceral response. We don't just build interfaces – we craft experiences that make your heart race and your mind expand. This is design that moves you.</p>
+                <h2 class="reveal">Разработка<br><span class="interactive-text">техническая</span><br>реализация</h2>
+                <p class="reveal">Полноценная разработка цифровых продуктов с использованием современных технологий.</p>
+                
+                <div class="services-grid">
+                    <div class="service-card reveal">
+                        <h3>🤖 Разработка ботов</h3>
+                        <p>Создание интеллектуальных чат-ботов и автоматизации</p>
+                        <div class="examples">
+                            <h4>Примеры работ:</h4>
+                            <ul>
+                                <li>Telegram боты</li>
+                                <li>WhatsApp боты</li>
+                                <li>Веб-чаты</li>
+                                <li>Голосовые ассистенты</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card reveal">
+                        <h3>📱 Мобильная разработка</h3>
+                        <p>Создание нативных и кроссплатформенных приложений</p>
+                        <div class="examples">
+                            <h4>Технологии:</h4>
+                            <ul>
+                                <li>React Native</li>
+                                <li>Flutter</li>
+                                <li>Swift (iOS)</li>
+                                <li>Kotlin (Android)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card reveal">
+                        <h3>🌐 Веб-разработка</h3>
+                        <p>Создание современных веб-приложений и сайтов</p>
+                        <div class="examples">
+                            <h4>Технологии:</h4>
+                            <ul>
+                                <li>React.js / Vue.js</li>
+                                <li>Node.js / Python</li>
+                                <li>PostgreSQL / MongoDB</li>
+                                <li>AWS / Google Cloud</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Маркетинг -->
+        <section class="section">
+            <div class="section-content">
+                <h2 class="reveal">Маркетинг<br><span class="interactive-text">продвижение</span><br>продукта</h2>
+                <p class="reveal">Комплексная стратегия продвижения продукта через органические и неорганические каналы.</p>
+                
+                <div class="highlight-box reveal">
+                    <h3>🎯 Органическое продвижение</h3>
+                    <p>SEO-оптимизация и контент-маркетинг для долгосрочного роста</p>
+                </div>
+                
+                <div class="services-grid">
+                    <div class="service-card reveal">
+                        <h3>🔍 SEO оптимизация</h3>
+                        <p>Повышение видимости в поисковых системах</p>
+                        <ul>
+                            <li>Техническая SEO оптимизация</li>
+                            <li>Контент-стратегия</li>
+                            <li>Локальная SEO</li>
+                            <li>Аналитика и отчеты</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="service-card reveal">
+                        <h3>📈 Неорганическое продвижение</h3>
+                        <p>Быстрое привлечение трафика через платные каналы</p>
+                        <ul>
+                            <li>Google Ads</li>
+                            <li>Facebook/Instagram Ads</li>
+                            <li>YouTube реклама</li>
+                            <li>Таргетированная реклама</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="service-card reveal">
+                        <h3>📊 Аналитика и оптимизация</h3>
+                        <p>Мониторинг эффективности и оптимизация кампаний</p>
+                        <ul>
+                            <li>Google Analytics</li>
+                            <li>Facebook Pixel</li>
+                            <li>A/B тестирование</li>
+                            <li>ROI анализ</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Финальная секция -->
         <section class="section">
             <div class="section-content">
-                <h2 class="reveal">Let's build your next<br><span class="interactive-text">experiential</span><br>project together.</h2>
-                <p class="reveal">Ready to create something that moves people? Let's talk about how we can bring your vision to life with technology that touches the soul.</p>
+                <h2 class="reveal">Готовы создать<br><span class="interactive-text">успешный</span><br>MVP?</h2>
+                <p class="reveal">Мы поможем вам пройти весь цикл создания продукта - от анализа рынка до успешного запуска и продвижения.</p>
+                
+                <div class="highlight-box reveal">
+                    <h3>🚀 Полный цикл разработки MVP</h3>
+                    <p>Аналитика → Дизайн → Разработка → Маркетинг = Успешный продукт</p>
+                </div>
             </div>
         </section>
     </div>
@@ -451,13 +644,13 @@
         const cursor = document.querySelector('.cursor');
         const cursorFollower = document.querySelector('.cursor-follower');
 
-        // Позиции камеры для разных эмоций
+        // Позиции камеры для разных этапов MVP
         const cameraPositions = [
-            { x: 2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } },      // Спокойствие
-            { x: 0, y: 3, z: 2, lookAt: { x: 0, y: 0, z: 0 } },      // Восхищение
-            { x: -2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } },     // Интрига
-            { x: 0, y: 0.5, z: 4, lookAt: { x: 0, y: 0, z: 0 } },     // Близость
-            { x: 3, y: 2, z: 1, lookAt: { x: 0, y: 0, z: 0 } },      // Энергия
+            { x: 2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } },      // Аналитика
+            { x: 0, y: 3, z: 2, lookAt: { x: 0, y: 0, z: 0 } },      // Дизайн
+            { x: -2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } },     // Разработка
+            { x: 0, y: 0.5, z: 4, lookAt: { x: 0, y: 0, z: 0 } },     // Маркетинг
+            { x: 3, y: 2, z: 1, lookAt: { x: 0, y: 0, z: 0 } },      // Запуск
             { x: 2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } }       // Возврат
         ];
 
@@ -466,7 +659,7 @@
         }
 
         function init() {
-            console.log('🎮 Инициализация эмоциональной 3D сцены...');
+            console.log('🎮 Инициализация MVP 3D сцены...');
             updateLoadingProgress(20);
             
             // Проверяем библиотеки
@@ -479,7 +672,7 @@
             
             // Создаем сцену
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x000000);
+            scene.background = new THREE.Color(0xf8f9fa);
             
             // Создаем камеру
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -505,23 +698,23 @@
             controls.minDistance = 1;
             controls.maxDistance = 8;
             
-            // Добавляем драматическое освещение
-            const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+            // Добавляем освещение
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
             scene.add(ambientLight);
             
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
             directionalLight.position.set(5, 10, 7.5);
             directionalLight.castShadow = true;
             directionalLight.shadow.mapSize.width = 2048;
             directionalLight.shadow.mapSize.height = 2048;
             scene.add(directionalLight);
             
-            // Добавляем цветные источники света для атмосферы
-            const light1 = new THREE.PointLight(0xff6b6b, 0.5, 10);
+            // Добавляем цветные источники света
+            const light1 = new THREE.PointLight(0x007bff, 0.5, 10);
             light1.position.set(2, 2, 2);
             scene.add(light1);
             
-            const light2 = new THREE.PointLight(0x4ecdc4, 0.5, 10);
+            const light2 = new THREE.PointLight(0x28a745, 0.5, 10);
             light2.position.set(-2, 1, 2);
             scene.add(light2);
             
@@ -580,7 +773,7 @@
                         action.setLoop(THREE.LoopRepeat, Infinity);
                         action.timeScale = 1.0; // Нормальная скорость анимации
                         action.play();
-                        console.log('🎬 Эмоциональная анимация запущена');
+                        console.log('🎬 MVP анимация запущена');
                     }
                     
                     updateLoadingProgress(100);
@@ -589,7 +782,7 @@
                     setTimeout(() => {
                         document.getElementById('loading').classList.add('hidden');
                         isLoaded = true;
-                        console.log('🎉 Эмоциональный опыт готов!');
+                        console.log('🎉 MVP опыт готов!');
                     }, 1000);
                 },
                 (progress) => {
@@ -636,12 +829,12 @@
             document.querySelectorAll('.interactive-text').forEach(element => {
                 element.addEventListener('mouseenter', () => {
                     cursor.style.transform = 'scale(2)';
-                    cursor.style.background = '#ff6b6b';
+                    cursor.style.background = '#007bff';
                 });
                 
                 element.addEventListener('mouseleave', () => {
                     cursor.style.transform = 'scale(1)';
-                    cursor.style.background = '#fff';
+                    cursor.style.background = '#2c3e50';
                 });
             });
         }
@@ -721,30 +914,14 @@
             });
         }
 
-        // Анимация чисел
-        function animateNumbers() {
-            const numbers = document.querySelectorAll('.stat-number[data-target]');
-            
-            numbers.forEach(number => {
-                const target = parseInt(number.getAttribute('data-target'));
-                const current = parseInt(number.textContent) || 0;
-                
-                if (current < target) {
-                    const increment = Math.ceil(target / 50);
-                    number.textContent = Math.min(current + increment, target);
-                }
-            });
-        }
-
         // Обработчики событий
         window.addEventListener('scroll', () => {
             revealOnScroll();
-            animateNumbers();
         });
 
         // Запуск приложения
         window.addEventListener('load', () => {
-            console.log('📱 Эмоциональный опыт загружается...');
+            console.log('📱 MVP опыт загружается...');
             
             setTimeout(() => {
                 init();
