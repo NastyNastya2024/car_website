@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MVP Development Cycle</title>
+    <title>Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
     <style>
         * { 
             margin: 0; 
@@ -12,8 +17,8 @@
         }
         
         body { 
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+            font-family: 'Unbounded', sans-serif;
+            background: #ffffff;
             color: #2c3e50;
             overflow-x: hidden;
             cursor: none;
@@ -72,11 +77,14 @@
         }
         
         .hero h1 {
-            font-size: clamp(3rem, 8vw, 8rem);
+            font-family: 'Zen Dots', cursive;
+            font-size: clamp(7rem, 18vw, 18rem);
             font-weight: 300;
             letter-spacing: -0.02em;
             line-height: 0.9;
             margin-bottom: 2rem;
+            margin-left: -900px;
+            margin-top: 200px;
             opacity: 0;
             transform: translateY(50px);
             animation: fadeInUp 1s ease 0.5s forwards;
@@ -336,8 +344,6 @@
             50% { transform: translateY(-20px) rotate(5deg); }
         }
         
-        /* Адаптивность */
-        @media (max-width: 768px) {
             .hero h1 {
                 font-size: 3rem;
             }
@@ -383,6 +389,83 @@
             color: rgba(255, 255, 255, 0.9);
             margin-bottom: 0;
         }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .nav {
+                gap: 20px;
+            }
+            
+            .hero {
+                padding: 0 20px;
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+                position: static;
+                text-align: center;
+                transform: none;
+                margin-bottom: 1rem;
+            }
+            
+            .hero .subtitle {
+                position: static;
+                text-align: center;
+                transform: none;
+                margin-bottom: 2rem;
+            }
+            
+            .hero-icons {
+                justify-content: center;
+                margin-left: 0;
+            }
+            
+            .hero-filters {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .hero-dashed-line {
+                display: none;
+            }
+            
+            .hero-right {
+                justify-content: center;
+            }
+            
+            .hero-handwritten {
+                display: none; /* Скрываем рукописный текст на мобильных */
+            }
+            
+            .hero-arrow {
+                display: none; /* Скрываем стрелку на мобильных */
+            }
+            
+            .section {
+                padding: 80px 5% 30px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section h2::before {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -392,7 +475,7 @@
 
     <!-- Загрузка -->
     <div class="loading" id="loading">
-        <div class="loading-text">MVP Development Cycle</div>
+        <div class="loading-text">Portfolio</div>
         <div class="loading-bar">
             <div class="loading-progress" id="loadingProgress"></div>
         </div>
@@ -405,8 +488,8 @@
     <div class="content">
         <!-- Hero секция -->
         <section class="hero">
-            <h1>MVP<br>Development<br>Cycle</h1>
-            <p class="subtitle">Полный цикл создания MVP продукта<br>от анализа до маркетинга</p>
+            <h1>Portfolio</h1>
+            <p class="subtitle">Креативные проекты<br>и дизайн решения</p>
             <div class="scroll-indicator">
                 <div class="scroll-line"></div>
             </div>
@@ -644,14 +727,14 @@
         const cursor = document.querySelector('.cursor');
         const cursorFollower = document.querySelector('.cursor-follower');
 
-        // Позиции камеры для разных этапов MVP
+        // Позиции камеры для разных этапов MVP (три четверти вид снизу слева)
         const cameraPositions = [
-            { x: 2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } },      // Аналитика
-            { x: 0, y: 3, z: 2, lookAt: { x: 0, y: 0, z: 0 } },      // Дизайн
-            { x: -2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } },     // Разработка
-            { x: 0, y: 0.5, z: 4, lookAt: { x: 0, y: 0, z: 0 } },     // Маркетинг
-            { x: 3, y: 2, z: 1, lookAt: { x: 0, y: 0, z: 0 } },      // Запуск
-            { x: 2, y: 1, z: 3, lookAt: { x: 0, y: 0, z: 0 } }       // Возврат
+            { x: 0, y: -1.5, z: 2.5, lookAt: { x: 2, y: -1, z: 0 } },      // Аналитика - три четверти снизу слева
+            { x: -1, y: 0, z: 3, lookAt: { x: 2, y: -1, z: 0 } },           // Дизайн - слева снизу
+            { x: -2, y: -1.5, z: 2, lookAt: { x: 2, y: -1, z: 0 } },       // Разработка - с левой стороны снизу
+            { x: 0, y: -2.5, z: 1.5, lookAt: { x: 2, y: -1, z: 0 } },      // Маркетинг - снизу
+            { x: 1, y: -2, z: 2, lookAt: { x: 2, y: -1, z: 0 } },           // Запуск - три четверти снизу слева крупно
+            { x: 0, y: -1.5, z: 2.5, lookAt: { x: 2, y: -1, z: 0 } }       // Возврат
         ];
 
         function updateLoadingProgress(percent) {
@@ -672,11 +755,29 @@
             
             // Создаем сцену
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf8f9fa);
+            scene.background = new THREE.Color(0xffffff);
+            
+            // Добавляем фоновое изображение
+            const loader = new THREE.TextureLoader();
+            loader.load('img/img1.png', (texture) => {
+                // Сохраняем пропорции изображения, увеличиваем в 2 раза
+                const aspectRatio = texture.image.width / texture.image.height;
+                const width = 20; // Увеличиваем в 2 раза (было 10)
+                const height = width / aspectRatio;
+                
+                const geometry = new THREE.PlaneGeometry(width, height);
+                const material = new THREE.MeshBasicMaterial({ 
+                    map: texture
+                    // Убираем прозрачность для полной яркости
+                });
+                const backgroundPlane = new THREE.Mesh(geometry, material);
+                backgroundPlane.position.set(0, 1, -5); // Чуть повыше
+                scene.add(backgroundPlane);
+            });
             
             // Создаем камеру
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(2, 1, 3);
+            camera.position.set(0, -1.5, 2.5); // Три четверти вид снизу слева
             
             // Создаем рендерер
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -746,8 +847,8 @@
                     model = fbx;
                     
                     // Настраиваем модель
-                    fbx.scale.setScalar(0.01);
-                    fbx.position.set(0, 0, 0);
+                    fbx.scale.setScalar(0.0144); // Уменьшаем еще на 10% (0.016 * 0.9 = 0.0144)
+                    fbx.position.set(2, -1, 0); // Немного пониже
                     
                     // Включаем тени и настраиваем материалы
                     fbx.traverse((child) => {
@@ -845,6 +946,19 @@
             const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
             const scrollProgress = Math.min(scrollY / documentHeight, 1);
             
+            // Адаптивное позиционирование робота
+            if (window.innerWidth <= 768) {
+                // На мобильных устройствах робот в центре
+                if (model) {
+                    model.position.set(0, -1, 0); // Центр экрана
+                }
+            } else {
+                // На десктопе робот в исходной позиции
+                if (model) {
+                    model.position.set(2, -1, 0); // Исходная позиция
+                }
+            }
+            
             // Вычисляем позицию камеры
             const totalPositions = cameraPositions.length - 1;
             const positionIndex = scrollProgress * totalPositions;
@@ -897,6 +1011,9 @@
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
+                
+                // Обновляем позицию робота при изменении размера
+                updateCameraPosition();
             }
         }
 
