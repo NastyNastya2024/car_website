@@ -59,6 +59,35 @@
             position: relative;
             z-index: 1;
         }
+
+        /* Навигация */
+        .nav-top {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
         
         /* Hero секция */
         .hero {
@@ -364,6 +393,12 @@
 
     <!-- 3D Сцена -->
     <div id="scene-container"></div>
+
+    <!-- Навигация -->
+    <nav class="nav-top">
+        <a href="mvp-cycle-white.html" class="nav-link">Белая версия</a>
+        <a href="../index.html" class="nav-link">Главная</a>
+    </nav>
 
     <!-- Контент -->
     <div class="content">
