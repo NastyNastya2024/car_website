@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - White Version</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=Unbounded:wght@200..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Manrope:700|Manrope:400');
+
+        :root {
+            --text: hsl(0, 0%, 10%);
+            --textDim: hsl(0, 0%, 40%);
+            --background: hsl(0, 0%, 100%);
+            --primary: hsl(0, 0%, 20%);
+            --primaryBg: hsla(0, 0%, 20%, 5%);
+            --primaryHi: hsla(0, 0%, 30%, 10%);
+            --primaryFg: hsl(0, 0%, 5%);
+            --secondary: hsl(0, 0%, 90%);
+            --secondaryFg: hsl(0, 0%, 30%);
+            --secondaryBg: hsla(0, 0%, 90%, 5%);
+            --secondaryHi: hsla(0, 0%, 80%, 20%);
+            --accent: hsl(0, 0%, 5%);
+            --accentBg: hsla(0, 0%, 5%, 5%);
+            --accentHi: hsla(0, 0%, 0%, 10%);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Manrope', sans-serif;
+            font-weight: 400;
+            background-color: var(--background);
+            color: var(--text);
+            padding: 0 5%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            cursor: none;
+            touch-action: none;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Кастомный курсор */
+        .cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: #000000;
+            border: 2px solid #000000;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.15s ease;
+        }
+        
+        /* Фиксированная 3D сцена */
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            background: var(--background);
+        }
+        
+        /* Хедер */
+        .header-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #000;
+            text-decoration: none;
+            margin-left: 2rem;
+        }
+
+        .star-icon {
+            width: 20px;
+            height: 20px;
+            background: #000;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-right: 2rem;
+        }
+
+        .nav-item {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: #000;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-item:hover {
+            opacity: 0.6;
+        }
+
+        /* Основной контент */
+        .main-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem 0;
+            align-self: flex-start;
+        }
+
+        /* Hero блок */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 6rem;
+            padding-top: 4rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Заголовок */
+        .header {
+            text-align: left;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+            padding-left: 0;
+            margin-left: 0;
+        }
+
+        .header.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .header h1 {
+            font-family: 'Zen Dots', cursive;
+            font-size: clamp(3.6rem, 7.2vw, 7.2rem);
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--textDim);
+            max-width: 600px;
+            margin: 0;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        /* Дополнительные элементы под заголовком */
+        .header-lines {
+            margin-top: 0.5rem;
+        }
+
+        .header-line {
+            width: 100%;
+            height: 2px;
+            background: #000;
+            margin: 1rem 0;
+        }
+
+        .header-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #000;
+            text-align: left;
+            margin: 1rem 0;
+            letter-spacing: 0.1em;
+            padding-left: 0;
+        }
+
+        /* Секция навыков */
+        .skills-section {
+            margin-top: 0.5rem;
+            margin-bottom: -1rem;
+            margin-left: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem;
+            max-width: 800px;
+        }
+
+        .skills-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .skill-item {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.2;
+            padding-left: 0;
+        }
+
+        /* Дополнительная линия между навыками и разделительной линией */
+        .skills-bottom-line {
+            position: relative;
+            margin: -100px 6rem 12.85rem 6rem;
+            height: 2px;
+            background: #000;
+            z-index: 10;
+        }
+
+        /* Разделительная линия между hero и первой секцией */
+        .section-divider {
+            position: relative;
+            margin: calc(3rem - 100px) 6rem 1rem 6rem;
+            height: 2px;
+            background: #000;
+            z-index: 10;
+        }
+
+        /* Центральный блок с цифрой 10 */
+        .center-stats {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .center-number {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(8rem, 15vw, 15rem);
+            font-weight: 700;
+            color: #000;
+            line-height: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .center-label {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: 400;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        /* Секции в стиле mantis */
+        .mantis-section {
+            padding: 8rem 6rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Первая секция должна быть ниже hero блока */
+        .mantis-section:first-of-type {
+            margin-top: 0; /* Убираем отступ, так как hero уже занимает всю высоту */
+        }
+
+        .mantis-content {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .mantis-title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 3rem;
+            color: #000;
+            text-align: left;
+        }
+
+        .interactive-text {
+            font-weight: 600;
+            color: #333;
+            position: relative;
+            display: inline-block;
+        }
+
+        .interactive-text::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #000;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .interactive-text:hover::after {
+            transform: scaleX(1);
+        }
+
+        .mantis-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 4rem;
+            max-width: 600px;
+        }
+
+        .mantis-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .mantis-stat {
+            text-align: left;
+        }
+
+        .mantis-number {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .mantis-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Эффекты при скролле */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Адаптивность для mantis секций */
+        @media (max-width: 768px) {
+            .mantis-section {
+                padding: 4rem 2rem;
+            }
+            
+            .mantis-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            .mantis-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Секции */
+        .section {
+            margin-bottom: 6rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .section.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section h2 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text);
+        }
+
+        /* Секция проектов - сдвигаем еще ниже */
+        .projects-section {
+            margin-top: 80vh; /* Сдвигаем еще ниже */
+        }
+
+        /* Карточки */
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .card p {
+            color: var(--textDim);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Кнопки */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--primaryFg);
+            transform: translateY(-2px);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            body {
+                padding: 0 5%;
+            }
+            
+            .main-content {
+                padding: 1rem 0;
+            }
+            
+            .section {
+                margin-bottom: 4rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Анимации появления */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* Скрытие 3D сцены для белой версии */
+        #scene-container {
+            display: block;
+            z-index: -1;
+        }
+
+        #canvas {
+            display: block;
+        }
+
+        /* Загрузочный экран */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            color: #000;
+            margin-bottom: 2rem;
+            font-family: 'Unbounded', sans-serif;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 2px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: #000;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Минималистичные стили */
+        .minimal-card {
+            background: white;
+            border: 2px solid #000;
+            border-radius: 0;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .minimal-card:hover {
+            background: #f8f8f8;
+            transform: translateY(-2px);
+        }
+
+        .minimal-btn {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            padding: 12px 24px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .minimal-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .minimal-section {
+            padding-bottom: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .minimal-section:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Хедер -->
+    <header class="header-top">
+        <a href="#" class="logo">
+            <div class="star-icon"></div>
+            ASYA
+        </a>
+        <nav class="nav-menu">
+            <a href="#" class="nav-item">CV</a>
+            <a href="#" class="nav-item">EN</a>
+            <a href="#" class="nav-item">RU</a>
+        </nav>
+    </header>
+
+    <!-- Загрузочный экран -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-text">Загрузка робота...</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+    </div>
+
+    <!-- 3D сцена -->
+    <div id="scene-container"></div>
+    <canvas id="canvas"></canvas>
+    
+    <!-- Кастомный курсор -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    
+    <!-- Основной контент -->
+    <div class="main-content">
+        <!-- Hero секция -->
+        <section class="hero-section">
+            <!-- Заголовок -->
+            <header class="header">
+            <h1>Portfolio</h1>
+            <div class="header-lines">
+                <div class="header-line"></div>
+                <div class="header-subtitle">ПОРТФОЛИО КОМАРОВОЙ АНАСТАСИИ</div>
+                <div class="header-line"></div>
+            </div>
+            
+            <!-- Навыки -->
+            <div class="skills-section">
+                <div class="skills-column">
+                    <div class="skill-item">В ІТ УЖЕ 10 ЛЕТ</div>
+                    <div class="skill-item">АНАЛИЗ РЫНКА</div>
+                    <div class="skill-item">UX АНАЛИТИКА</div>
+                    <div class="skill-item">ПОСТРОЕНИЕ CJM</div>
+                    <div class="skill-item">ВЕБ ДИЗАЙН</div>
+                    <div class="skill-item">МОБИЛЬНЫЙ ДИЗАЙН</div>
+                    <div class="skill-item">НОТИВНАЯ РАЗРАБОТКА</div>
+                </div>
+                <div class="skills-column">
+                    <div class="skill-item">РАЗРАБОТКА</div>
+                    <div class="skill-item">ДИЗАЙН</div>
+                    <div class="skill-item">АНАЛИТИКА</div>
+                </div>
+            </div>
+            </header>
+        </section>
+        
+        <!-- Дополнительная линия между навыками и разделительной линией -->
+        <div class="skills-bottom-line"></div>
+        
+        <!-- Центральный блок с цифрой 10 -->
+        <div class="center-stats">
+            <div class="center-number">10</div>
+            <div class="center-label">ЛЕТ В IT</div>
+        </div>
+        
+        <!-- Разделительная линия между hero и первой секцией -->
+        <div class="section-divider"></div>
+        
+        <!-- Дополнительные секции в стиле mantis -->
+        <section class="mantis-section">
+            <div class="mantis-content">
+                <h2 class="mantis-title reveal">мы<br><span class="interactive-text">создаем</span><br>решения.</h2>
+                <p class="mantis-text reveal">С 10-летним опытом в IT мы понимаем, что каждый проект уникален. Мы объединяем аналитику, дизайн и разработку для создания продуктов, которые не просто работают, а вдохновляют.</p>
+                
+                <div class="mantis-stats">
+                    <div class="mantis-stat">
+                        <span class="mantis-number reveal" data-target="10">0</span>
+                        <div class="mantis-label reveal">Лет в IT</div>
+                    </div>
+                    <div class="mantis-stat">
+                        <span class="mantis-number reveal" data-target="50">0</span>
+                        <div class="mantis-label reveal">Проектов</div>
+                    </div>
+                    <div class="mantis-stat">
+                        <span class="mantis-number reveal" data-target="100">0</span>
+                        <div class="mantis-label reveal">Клиентов</div>
+                    </div>
+                    <div class="mantis-stat">
+                        <span class="mantis-number reveal" data-target="∞">0</span>
+                        <div class="mantis-label reveal">Возможностей</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mantis-section">
+            <div class="mantis-content">
+                <h2 class="mantis-title reveal">мы<br><span class="interactive-text">анализируем</span><br>данные.</h2>
+                <p class="mantis-text reveal">Каждое решение основано на глубоком анализе. Мы изучаем поведение пользователей, анализируем рынок и создаем стратегии, которые приводят к реальным результатам.</p>
+            </div>
+        </section>
+
+        <section class="mantis-section">
+            <div class="mantis-content">
+                <h2 class="mantis-title reveal">мы<br><span class="interactive-text">проектируем</span><br>будущее.</h2>
+                <p class="mantis-text reveal">Дизайн — это не просто красивые картинки. Это создание опыта, который решает проблемы и приносит радость. Мы проектируем интерфейсы, которые интуитивно понятны и эмоционально привлекательны.</p>
+            </div>
+        </section>
+
+        <section class="mantis-section">
+            <div class="mantis-content">
+                <h2 class="mantis-title reveal">Давайте создадим<br><span class="interactive-text">ваш</span><br>проект вместе.</h2>
+                <p class="mantis-text reveal">Готовы воплотить вашу идею в жизнь? Давайте обсудим, как мы можем помочь вам создать продукт, который будет не только функциональным, но и вдохновляющим.</p>
+            </div>
+        </section>
+        
+    </div>
+
+    <!-- Локальные библиотеки Three.js -->
+    <script src="libs/fflate.min.js"></script>
+    <script src="libs/three.min.js"></script>
+    <script src="libs/FBXLoader.js"></script>
+    <script src="libs/OrbitControls.js"></script>
+
+    <script>
+        let scene, camera, renderer, controls, mixer, clock = { getDelta: () => 0.016 };
+        let model;
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+        let scrollY = 0;
+        let isLoaded = false;
+
+        function updateLoadingProgress(percent) {
+            document.getElementById('loadingProgress').style.width = percent + '%';
+        }
+
+        function init() {
+            console.log('🎮 Инициализация белой версии с роботом...');
+            updateLoadingProgress(20);
+            
+            // Проверяем библиотеки
+            if (typeof THREE === 'undefined') {
+                console.error('Three.js не загружен');
+                return;
+            }
+            
+            updateLoadingProgress(40);
+            
+            // Создаем сцену
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xffffff); // Белый фон
+            
+            // Создаем камеру - начинаем с первой позиции из массива
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(2, 1, 3); // Первая позиция из cameraPositions
+            camera.lookAt(3.0, -3.0, 0); // Смотрим на новую позицию робота
+            
+            // Создаем рендерер
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            document.getElementById('scene-container').appendChild(renderer.domElement);
+            
+            updateLoadingProgress(60);
+            
+            // Создаем контроллеры камеры (отключены для скролл-управления)
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enabled = false; // Отключаем для управления через скролл
+            controls.target.set(0, 0, 0); // Смотрим на центр робота
+            
+            // Добавляем освещение для белой версии с белым роботом
+            const ambientLight = new THREE.AmbientLight(0x808080, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
+            directionalLight.position.set(5, 10, 7.5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+            
+            // Добавляем дополнительные источники света для лучшего освещения белого робота
+            const light1 = new THREE.PointLight(0xffffff, 0.8, 15);
+            light1.position.set(3, 3, 3);
+            scene.add(light1);
+            
+            const light2 = new THREE.PointLight(0xffffff, 0.6, 12);
+            light2.position.set(-3, 2, 3);
+            scene.add(light2);
+            
+            // Добавляем контрастный источник света для теней
+            const rimLight = new THREE.DirectionalLight(0x000000, 0.3);
+            rimLight.position.set(-5, 5, -5);
+            scene.add(rimLight);
+            
+            updateLoadingProgress(80);
+            
+            // Загружаем модель
+            loadFBXModel();
+            
+            // Настраиваем обработчики событий
+            setupEventListeners();
+            
+            // Запускаем анимационный цикл
+            animate();
+            
+            // Обработка изменения размера окна
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function loadFBXModel() {
+            console.log('📥 Загрузка танцующей фигуры...');
+            
+            const loader = new THREE.FBXLoader();
+            
+            loader.load(
+                'models/Dancing Twerk.fbx',
+                function(fbx) {
+                    console.log('✅ Модель загружена');
+                    model = fbx;
+                    
+                    // Настраиваем модель для белой версии - сдвигаем вправо от надписи Portfolio
+                    fbx.scale.setScalar(0.0167); // Уменьшаем размер на 5%
+                    fbx.position.set(1.5, -1.5, 0); // Сдвигаем робота вправо
+                    
+                    // Делаем модель белой для контраста с белым фоном
+                    fbx.traverse(function(child) {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            
+                            if (child.material) {
+                                child.material.color.setHex(0xffffff); // Белый цвет
+                                child.material.metalness = 0.2;
+                                child.material.roughness = 0.3;
+                                child.material.emissive.setHex(0x222222); // Добавляем легкое свечение
+                            }
+                        }
+                    });
+                    
+                    scene.add(fbx);
+                    
+                    // Настраиваем анимации
+                    if (fbx.animations.length > 0) {
+                        mixer = new THREE.AnimationMixer(fbx);
+                        const action = mixer.clipAction(fbx.animations[0]);
+                        action.play();
+                    }
+                    
+                    updateLoadingProgress(100);
+                    
+                    // Скрываем загрузочный экран
+                    setTimeout(() => {
+                        document.getElementById('loadingScreen').classList.add('hidden');
+                        isLoaded = true;
+                    }, 500);
+                },
+                function(progress) {
+                    const percent = Math.round((progress.loaded / progress.total) * 100);
+                    updateLoadingProgress(percent);
+                },
+                function(error) {
+                    console.error('❌ Ошибка загрузки модели:', error);
+                    updateLoadingProgress(100);
+                    document.getElementById('loadingScreen').classList.add('hidden');
+                }
+            );
+        }
+
+        function setupEventListeners() {
+            // Обработка движения мыши
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+                
+                targetX = mouseX * 0.5;
+                targetY = mouseY * 0.5;
+            });
+            
+            // Обработка скролла
+            window.addEventListener('scroll', () => {
+                scrollY = window.pageYOffset;
+                updateCameraPosition();
+            });
+        }
+
+        // Позиции камеры для разных эмоций (как в mantis-style)
+        const cameraPositions = [
+            { x: 2, y: 1, z: 3, lookAt: { x: 3.0, y: -3.0, z: 0 } },      // Спокойствие
+            { x: 0, y: 3, z: 2, lookAt: { x: 3.0, y: -3.0, z: 0 } },      // Восхищение
+            { x: -2, y: 1, z: 3, lookAt: { x: 3.0, y: -3.0, z: 0 } },     // Интрига
+            { x: 0, y: 0.5, z: 4, lookAt: { x: 3.0, y: -3.0, z: 0 } },     // Близость
+            { x: 3, y: 2, z: 1, lookAt: { x: 3.0, y: -3.0, z: 0 } },      // Энергия
+            { x: 2, y: 1, z: 3, lookAt: { x: 3.0, y: -3.0, z: 0 } }       // Возврат
+        ];
+
+        function updateCameraPosition() {
+            if (!isLoaded) return;
+            
+            const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollProgress = Math.min(scrollY / documentHeight, 1);
+            
+            // Робот сдвинут еще правее
+            if (model) {
+                model.position.set(3.0, -3.0, 0); // Сдвигаем еще правее
+            }
+            
+            // Вычисляем позицию камеры (как в mantis-style)
+            const totalPositions = cameraPositions.length - 1;
+            const positionIndex = scrollProgress * totalPositions;
+            const currentIndex = Math.floor(positionIndex);
+            const nextIndex = Math.min(currentIndex + 1, totalPositions);
+            const t = positionIndex - currentIndex;
+            
+            // Плавная интерполяция
+            const currentPos = cameraPositions[currentIndex];
+            const nextPos = cameraPositions[nextIndex];
+            
+            camera.position.x = THREE.MathUtils.lerp(currentPos.x, nextPos.x, t);
+            camera.position.y = THREE.MathUtils.lerp(currentPos.y, nextPos.y, t);
+            camera.position.z = THREE.MathUtils.lerp(currentPos.z, nextPos.z, t);
+            
+            camera.lookAt(
+                THREE.MathUtils.lerp(currentPos.lookAt.x, nextPos.lookAt.x, t),
+                THREE.MathUtils.lerp(currentPos.lookAt.y, nextPos.lookAt.y, t),
+                THREE.MathUtils.lerp(currentPos.lookAt.z, nextPos.lookAt.z, t)
+            );
+            
+            camera.updateProjectionMatrix();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Обновляем анимации
+            if (mixer) {
+                mixer.update(clock.getDelta());
+            }
+            
+            // Рендерим сцену
+            if (renderer && scene && camera) {
+                renderer.render(scene, camera);
+            }
+        }
+
+        function onWindowResize() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                updateCameraPosition();
+            }
+        }
+
+        // Кастомный курсор
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Анимация появления элементов при скролле
+        function revealOnScroll() {
+            const elements = document.querySelectorAll('.section, .header');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+        // Mantis-style анимации
+        function initMantisAnimations() {
+            // Intersection Observer для анимации при скролле
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        // Анимация чисел
+                        if (entry.target.classList.contains('mantis-number')) {
+                            animateNumber(entry.target);
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Наблюдаем за элементами с классом reveal
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Функция анимации чисел
+        function animateNumber(element) {
+            const target = element.getAttribute('data-target');
+            const duration = 2000;
+            const start = performance.now();
+            
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                if (target === '∞') {
+                    element.textContent = '∞';
+                } else {
+                    const targetNum = parseInt(target);
+                    const current = Math.floor(progress * targetNum);
+                    element.textContent = current;
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                }
+            }
+            
+            requestAnimationFrame(updateNumber);
+        }
+
+        // Запуск приложения
+        window.addEventListener('load', () => {
+            console.log('📱 Белая версия с роботом загружается...');
+            
+            setTimeout(() => {
+                init();
+                revealOnScroll();
+                initMantisAnimations();
+                
+                // Анимация заголовка при загрузке
+                const header = document.querySelector('.header');
+                if (header) {
+                    header.classList.add('revealed');
+                }
+            }, 200);
+        });
+    </script>
+</body>
+</html>
