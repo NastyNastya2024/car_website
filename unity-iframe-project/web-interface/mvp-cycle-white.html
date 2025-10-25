@@ -259,7 +259,7 @@
         /* Дополнительная линия между навыками и разделительной линией */
         .skills-bottom-line {
             position: relative;
-            margin: -100px 6rem 3rem 6rem;
+            margin: -100px 6rem 4.95rem 6rem;
             height: 2px;
             background: #000;
             z-index: 20;
@@ -268,7 +268,7 @@
         /* Разделительная линия между hero и первой секцией */
         .section-divider {
             position: relative;
-            margin: calc(3rem - 100px) 6rem 1rem 6rem;
+            margin: calc(4.95rem - 100px) 6rem 0.55rem 6rem;
             height: 2px;
             background: #000;
             z-index: 20;
@@ -528,7 +528,7 @@
         /* Горизонтальная линия под блоком */
         .block-bottom-line {
             position: relative;
-            margin: 3rem 6rem 0 6rem;
+            margin: 1.65rem 6rem 0 6rem;
             height: 2px;
             background: #000;
             z-index: 20;
@@ -537,7 +537,7 @@
         /* Вторая горизонтальная линия под блоком */
         .block-bottom-line-2 {
             position: relative;
-            margin: 3rem 6rem 0 6rem;
+            margin: 4.95rem 6rem 0 6rem;
             height: 2px;
             background: #000;
             z-index: 20;
@@ -545,7 +545,7 @@
 
         /* Случайная картинка под последней линией */
         .random-image {
-            flex: 0 0 calc(100vw - 6rem - (6rem + 653px) - 6rem - 100px + 20px - 100px - 30px + 100px + 20px + 10px);
+            flex: 0 0 400px;
             height: 350px;
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
             border-radius: 8px;
@@ -954,16 +954,114 @@
             border-bottom: none;
         }
 
-        /* Вертикальная линия */
-        .vertical-line {
-            position: fixed;
-            top: 0;
-            left: calc(6rem + 653px);
-            width: 2px;
-            height: 100vh;
+        /* Горизонтальная линия справа от оси Y */
+        .horizontal-line-right {
+            position: relative;
+            margin: 3rem 6rem 0 6rem;
+            height: 2px;
+            width: calc(55% - 75px);
             background: #000;
-            z-index: 5;
-            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Второй контейнер для колонки с текстом и описанием проекта */
+        .content-row-2 {
+            position: relative;
+            margin: 3rem 6rem 0 6rem;
+            display: flex;
+            gap: 2rem;
+            z-index: 20;
+        }
+
+        /* Колонка с проектами (второй блок) */
+        .clients-column-2 {
+            flex: 0 0 200px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .client-item-2 {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .client-item-2:hover {
+            background: rgba(0, 0, 0, 0.05);
+            padding-left: 0.5rem;
+        }
+
+        /* Описание проекта */
+        .project-description {
+            flex: 0 0 calc((100% - 200px - 2rem) / 2 * 0.93);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .project-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Пагинация для второго блока */
+        .pagination-2 {
+            margin-top: 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .pagination-info-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .pagination-controls-2 {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .pagination-numbers-2 {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .pagination-number-2 {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.7rem;
+            color: #666;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-number-2:hover,
+        .pagination-number-2.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* Широкая горизонтальная линия после блока с проектами */
+        .wide-horizontal-line {
+            position: relative;
+            margin: 3rem 6rem 0 6rem;
+            height: 3px;
+            background: #000;
+            z-index: 20;
         }
 
     </style>
@@ -997,10 +1095,6 @@
     <!-- Кастомный курсор -->
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
-    
-    <!-- Вертикальная линия -->
-    <div class="vertical-line"></div>
-    
     
     <!-- Основной контент -->
     <div class="main-content">
@@ -1112,6 +1206,47 @@
         <div class="block-bottom-line-2"></div>
         
         <!-- Горизонтальная линия справа от оси Y -->
+        <div class="horizontal-line-right"></div>
+        
+        <!-- Второй блок с проектами и текстом -->
+        <div class="content-row-2">
+            <div class="clients-column-2">
+                <div class="client-item-2" data-project="acme">
+                    <div class="client-name">ACME</div>
+                </div>
+                <div class="client-item-2" data-project="abel">
+                    <div class="client-name">Abel</div>
+                </div>
+                <div class="client-item-2" data-project="blunt">
+                    <div class="client-name">BLUNT Umbrellas</div>
+                </div>
+                <div class="client-item-2" data-project="becuming">
+                    <div class="client-name">Becuming</div>
+                </div>
+                <div class="client-item-2" data-project="deadly">
+                    <div class="client-name">Deadly Ponies</div>
+                </div>
+                
+                <!-- Пагинация -->
+                <div class="pagination-2">
+                    <div class="pagination-info-2">Показано 5 из 15 проектов</div>
+                    <div class="pagination-controls-2">
+                        <div class="pagination-numbers-2">
+                            <button class="pagination-number-2 active" data-page="1">1</button>
+                            <button class="pagination-number-2" data-page="2">2</button>
+                            <button class="pagination-number-2" data-page="3">3</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="project-description">
+                <h3 class="project-title">ACME</h3>
+                <p class="project-text">Инновационный подход к созданию современных веб-решений с фокусом на пользовательский опыт и технологическую эффективность.</p>
+            </div>
+        </div>
+        
+        <!-- Широкая горизонтальная линия после блока с проектами -->
+        <div class="wide-horizontal-line"></div>
         
         <!-- Дополнительные секции в стиле mantis -->
         <section class="mantis-section">
@@ -1137,13 +1272,6 @@
                         <div class="mantis-label reveal">Возможностей</div>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section class="mantis-section">
-            <div class="mantis-content">
-                <h2 class="mantis-title reveal">мы<br><span class="interactive-text">анализируем</span><br>данные.</h2>
-                <p class="mantis-text reveal">Каждое решение основано на глубоком анализе. Мы изучаем поведение пользователей, анализируем рынок и создаем стратегии, которые приводят к реальным результатам.</p>
             </div>
         </section>
 
@@ -1515,6 +1643,13 @@
             const paginationNumbers = document.querySelectorAll('.pagination-number');
             const paginationInfo = document.querySelector('.pagination-info');
             
+            // Элементы второго блока
+            const clientItems2 = document.querySelectorAll('.client-item-2');
+            const projectTitle = document.querySelector('.project-title');
+            const projectText = document.querySelector('.project-text');
+            const paginationNumbers2 = document.querySelectorAll('.pagination-number-2');
+            const paginationInfo2 = document.querySelector('.pagination-info-2');
+            
             // Данные для разных страниц
             const pageData = {
                 1: {
@@ -1548,6 +1683,70 @@
                     info: 'Показано 5 из 15 проектов'
                 }
             };
+
+            // Данные для описаний проектов
+            const projectDescriptions = {
+                acme: {
+                    title: 'ACME',
+                    text: 'Инновационный подход к созданию современных веб-решений с фокусом на пользовательский опыт и технологическую эффективность.'
+                },
+                abel: {
+                    title: 'Abel',
+                    text: 'Создание элегантного дизайна с акцентом на минимализм и функциональность для премиального бренда.'
+                },
+                blunt: {
+                    title: 'BLUNT Umbrellas',
+                    text: 'Разработка современного интернет-магазина с интуитивной навигацией и оптимизированным процессом покупки.'
+                },
+                becuming: {
+                    title: 'Becuming',
+                    text: 'Дизайн и разработка платформы для красоты и стиля с персонализированными рекомендациями.'
+                },
+                deadly: {
+                    title: 'Deadly Ponies',
+                    text: 'Создание уникального брендинга и веб-платформы для люксового fashion-бренда.'
+                },
+                flooring: {
+                    title: 'Flooring Xtra',
+                    text: 'Разработка комплексного решения для строительной компании с каталогом материалов и калькулятором.'
+                },
+                kokako: {
+                    title: 'Kōkako',
+                    text: 'Создание экологичного дизайна для кофейного бренда с акцентом на устойчивость и качество.'
+                },
+                leif: {
+                    title: 'Leif',
+                    text: 'Разработка современной платформы для wellness-приложений с фокусом на здоровый образ жизни.'
+                },
+                muse: {
+                    title: 'Muse',
+                    text: 'Создание креативной платформы для художников и дизайнеров с портфолио и галереей работ.'
+                },
+                ruby: {
+                    title: 'RUBY',
+                    text: 'Разработка элегантного решения для ювелирного бренда с виртуальной примеркой и 3D-визуализацией.'
+                },
+                woodwrights: {
+                    title: 'Woodwrights',
+                    text: 'Создание традиционного дизайна для мастерской по дереву с каталогом изделий и историей ремесла.'
+                },
+                almond: {
+                    title: 'Studio Almond',
+                    text: 'Разработка креативного портфолио для дизайн-студии с интерактивными проектами и кейсами.'
+                },
+                creative: {
+                    title: 'Creative Agency',
+                    text: 'Создание современной платформы для креативного агентства с портфолио и услугами.'
+                },
+                design: {
+                    title: 'Design Studio',
+                    text: 'Разработка минималистичного сайта для дизайн-студии с акцентом на работы и процесс.'
+                },
+                brand: {
+                    title: 'Brand Lab',
+                    text: 'Создание инновационной платформы для брендингового агентства с инструментами и исследованиями.'
+                }
+            };
             
             // Устанавливаем начальный класс для картинки
             randomImage.classList.add('acme');
@@ -1578,6 +1777,42 @@
                 // Добавляем обработчики событий к новым элементам
                 addHoverListeners();
             }
+
+            // Функция для обновления списка проектов во втором блоке
+            function updateProjectsList2(page) {
+                const clientsColumn2 = document.querySelector('.clients-column-2');
+                const paginationDiv2 = document.querySelector('.pagination-2');
+                
+                // Удаляем старые проекты (кроме пагинации)
+                const oldProjects2 = clientsColumn2.querySelectorAll('.client-item-2');
+                oldProjects2.forEach(project => project.remove());
+                
+                // Добавляем новые проекты
+                pageData[page].projects.forEach(projectData => {
+                    const projectDiv = document.createElement('div');
+                    projectDiv.className = 'client-item-2';
+                    projectDiv.setAttribute('data-project', projectData.project);
+                    projectDiv.innerHTML = `<div class="client-name">${projectData.name}</div>`;
+                    
+                    // Вставляем перед пагинацией
+                    clientsColumn2.insertBefore(projectDiv, paginationDiv2);
+                });
+                
+                // Обновляем информацию
+                paginationInfo2.textContent = pageData[page].info;
+                
+                // Добавляем обработчики событий к новым элементам
+                addHoverListeners2();
+            }
+
+            // Функция для обновления описания проекта
+            function updateProjectDescription(projectKey) {
+                const description = projectDescriptions[projectKey];
+                if (description) {
+                    projectTitle.textContent = description.title;
+                    projectText.textContent = description.text;
+                }
+            }
             
             // Функция для добавления обработчиков наведения
             function addHoverListeners() {
@@ -1601,6 +1836,23 @@
                     });
                 });
             }
+
+            // Функция для добавления обработчиков наведения для второго блока
+            function addHoverListeners2() {
+                const newClientItems2 = document.querySelectorAll('.client-item-2');
+                
+                newClientItems2.forEach(item => {
+                    item.addEventListener('mouseenter', function() {
+                        const project = this.getAttribute('data-project');
+                        updateProjectDescription(project);
+                    });
+                    
+                    item.addEventListener('click', function() {
+                        const project = this.getAttribute('data-project');
+                        updateProjectDescription(project);
+                    });
+                });
+            }
             
             // Обработчики для пагинации
             paginationNumbers.forEach(button => {
@@ -1617,9 +1869,26 @@
                     updateProjectsList(page);
                 });
             });
+
+            // Обработчики для пагинации второго блока
+            paginationNumbers2.forEach(button => {
+                button.addEventListener('click', function() {
+                    const page = parseInt(this.getAttribute('data-page'));
+                    
+                    // Убираем активный класс со всех кнопок
+                    paginationNumbers2.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Добавляем активный класс к текущей кнопке
+                    this.classList.add('active');
+                    
+                    // Обновляем список проектов
+                    updateProjectsList2(page);
+                });
+            });
             
             // Инициализируем обработчики для первой страницы
             addHoverListeners();
+            addHoverListeners2();
         });
     </script>
 </body>
