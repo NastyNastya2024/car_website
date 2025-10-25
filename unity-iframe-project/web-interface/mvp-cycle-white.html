@@ -105,8 +105,6 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -261,10 +259,10 @@
         /* Дополнительная линия между навыками и разделительной линией */
         .skills-bottom-line {
             position: relative;
-            margin: -100px 6rem 12.85rem 6rem;
+            margin: -100px 6rem 3rem 6rem;
             height: 2px;
             background: #000;
-            z-index: 10;
+            z-index: 20;
         }
 
         /* Разделительная линия между hero и первой секцией */
@@ -273,62 +271,363 @@
             margin: calc(3rem - 100px) 6rem 1rem 6rem;
             height: 2px;
             background: #000;
-            z-index: 10;
+            z-index: 20;
+        }
+
+        /* Третья горизонтальная линия */
+        .third-line {
+            position: relative;
+            margin: 3rem 6rem 0 0;
+            margin-left: calc(6rem + 653px - 100px + 30px);
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        /* Дополнительные короткие линии */
+        .short-line-1, .short-line-3, .short-line-5 {
+            position: relative;
+            margin: 3rem 6rem 0 0;
+            margin-left: calc(6rem + 653px - 100px + 30px);
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        .short-line-2 {
+            position: relative;
+            margin: 12rem 6rem 0 0;
+            margin-left: calc(6rem + 653px - 100px + 30px);
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        .short-line-4 {
+            position: relative;
+            margin: 12rem 6rem 0 0;
+            margin-left: calc(6rem + 653px - 100px + 30px);
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        .short-line-6 {
+            position: relative;
+            margin: 12rem 6rem 0 6rem;
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        /* Седьмая длинная горизонтальная линия */
+        .seventh-line {
+            position: relative;
+            margin: 12rem 6rem 0 6rem;
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        /* Восьмая длинная горизонтальная линия */
+        .eighth-line {
+            position: relative;
+            margin: 3rem 6rem 0 6rem;
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        /* Контейнер для колонки с текстом и картинки */
+        .content-row {
+            position: relative;
+            margin: 3rem 6rem 0 6rem;
+            display: flex;
+            gap: 2rem;
+            z-index: 20;
+        }
+
+        /* Колонка с текстом (как Select Clients) */
+        .clients-column {
+            flex: 0 0 200px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .client-item {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.2rem;
+        }
+
+        .client-code {
+            font-weight: 400;
+            color: #666;
+            font-size: 0.7rem;
+            margin-bottom: 0.1rem;
+        }
+
+        .client-category {
+            font-weight: 400;
+            color: #888;
+            font-size: 0.7rem;
+            margin-bottom: 0.1rem;
+        }
+
+        .client-country {
+            font-weight: 400;
+            color: #999;
+            font-size: 0.7rem;
+        }
+
+        /* Пагинация */
+        .pagination {
+            margin-top: 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .pagination-info {
+            margin-bottom: 0.5rem;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .pagination-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.7rem;
+            color: #666;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-btn:hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-numbers {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .pagination-number {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.7rem;
+            color: #666;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-number:hover,
+        .pagination-number.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* Стили для смены картинок при наведении */
+        .client-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .client-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+            padding-left: 0.5rem;
+        }
+
+        .random-image {
+            transition: all 0.5s ease;
+        }
+
+        /* Разные градиенты для разных проектов */
+        .random-image.acme {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+        }
+
+        .random-image.abel {
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe);
+        }
+
+        .random-image.blunt {
+            background: linear-gradient(45deg, #11998e, #38ef7d, #ffecd2, #fcb69f, #a8edea);
+        }
+
+        .random-image.becuming {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef, #fecfef, #fad0c4, #ffd1ff);
+        }
+
+        .random-image.deadly {
+            background: linear-gradient(45deg, #a8c0ff, #3f2b96, #ff6b6b, #ee5a24, #feca57);
+        }
+
+        .random-image.flooring {
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe);
+        }
+
+        .random-image.kokako {
+            background: linear-gradient(45deg, #11998e, #38ef7d, #ffecd2, #fcb69f, #a8edea);
+        }
+
+        .random-image.leif {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef, #fecfef, #fad0c4, #ffd1ff);
+        }
+
+        .random-image.muse {
+            background: linear-gradient(45deg, #a8c0ff, #3f2b96, #ff6b6b, #ee5a24, #feca57);
+        }
+
+        .random-image.ruby {
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe);
+        }
+
+        .random-image.woodwrights {
+            background: linear-gradient(45deg, #11998e, #38ef7d, #ffecd2, #fcb69f, #a8edea);
+        }
+
+        .random-image.almond {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef, #fecfef, #fad0c4, #ffd1ff);
+        }
+
+        .random-image.creative {
+            background: linear-gradient(45deg, #a8c0ff, #3f2b96, #ff6b6b, #ee5a24, #feca57);
+        }
+
+        .random-image.design {
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe);
+        }
+
+        .random-image.brand {
+            background: linear-gradient(45deg, #11998e, #38ef7d, #ffecd2, #fcb69f, #a8edea);
+        }
+
+        /* Горизонтальная линия под блоком */
+        .block-bottom-line {
+            position: relative;
+            margin: 3rem 6rem 0 6rem;
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        /* Вторая горизонтальная линия под блоком */
+        .block-bottom-line-2 {
+            position: relative;
+            margin: 3rem 6rem 0 6rem;
+            height: 2px;
+            background: #000;
+            z-index: 20;
+        }
+
+        /* Случайная картинка под последней линией */
+        .random-image {
+            flex: 0 0 calc(100vw - 6rem - (6rem + 653px) - 6rem - 100px + 20px - 100px - 30px + 100px + 20px + 10px);
+            height: 350px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            border-radius: 8px;
+            margin-left: calc(6rem + 653px - 6rem + 500px - 1000px + 200px);
         }
 
         /* Центральный блок с цифрой 10 */
         .center-stats {
-            position: absolute;
-            top: calc(50% + 100px);
-            left: 50%;
-            transform: translate(-50%, -50%);
+            position: relative;
             text-align: center;
             z-index: 15;
             pointer-events: none;
+            margin: 2rem 0;
+            padding: 2rem 0;
+        }
+
+        .center-stats::before {
+            content: '';
+            position: absolute;
+            top: -2rem;
+            left: 0;
+            right: 0;
+            bottom: -2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+
+        .center-content {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 6rem;
+        }
+
+        .center-left {
+            flex: 0 0 auto;
+            text-align: left;
+        }
+
+        .center-right {
+            flex: 1;
+            text-align: left;
+            max-width: calc(653px - 6rem - 200px);
+            margin-left: 0;
+        }
+
+        .center-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: #333;
+            margin: 0;
+            position: relative;
+            z-index: 20;
+            text-transform: uppercase;
         }
 
         .center-number {
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(8rem, 15vw, 15rem);
-            font-weight: 700;
+            font-family: 'Zen Dots', cursive;
+            font-size: clamp(4rem, 7.5vw, 7.5rem);
+            font-weight: 400;
             color: #000;
             line-height: 0.8;
             margin-bottom: 1rem;
+            text-align: left;
         }
 
         .center-label {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-size: 0.75rem;
             font-weight: 400;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-        }
-
-        /* Кнопка в белом стиле */
-        .white-btn {
-            background: #000;
-            color: #fff;
-            border: 2px solid #000;
-            padding: 16px 32px;
-            text-decoration: none;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
+            color: #000;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            transition: all 0.3s ease;
-            display: inline-block;
-            cursor: pointer;
+            margin-left: 120px;
+            margin-top: 0.5rem;
             position: relative;
             z-index: 20;
-        }
-
-        .white-btn:hover {
-            background: #fff;
-            color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         /* Секции в стиле mantis */
@@ -654,6 +953,19 @@
         .minimal-section:last-child {
             border-bottom: none;
         }
+
+        /* Вертикальная линия */
+        .vertical-line {
+            position: fixed;
+            top: 0;
+            left: calc(6rem + 653px);
+            width: 2px;
+            height: 100vh;
+            background: #000;
+            z-index: 5;
+            pointer-events: none;
+        }
+
     </style>
 </head>
 <body>
@@ -685,6 +997,10 @@
     <!-- Кастомный курсор -->
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
+    
+    <!-- Вертикальная линия -->
+    <div class="vertical-line"></div>
+    
     
     <!-- Основной контент -->
     <div class="main-content">
@@ -724,13 +1040,78 @@
         
         <!-- Центральный блок с цифрой 10 -->
         <div class="center-stats">
-            <div class="center-number">10</div>
-            <div class="center-label">ЛЕТ В IT</div>
-            <a href="#" class="white-btn">СВЯЗАТЬСЯ</a>
+            <div class="center-content">
+                <div class="center-left">
+                    <div class="center-number reveal" data-target="10">0</div>
+                    <div class="center-label">ЛЕТ В IT</div>
+                </div>
+                <div class="center-right">
+                    <p class="center-description">С 10-летним опытом в IT понимаю, что каждый проект уникален. Объединяем аналитику, дизайн и разработку для проработки качественных решений</p>
+                </div>
+            </div>
         </div>
         
         <!-- Разделительная линия между hero и первой секцией -->
         <div class="section-divider"></div>
+        
+        <!-- Третья горизонтальная линия -->
+        <div class="third-line"></div>
+        
+        <!-- Дополнительные короткие линии -->
+        <div class="short-line-1"></div>
+        <div class="short-line-2"></div>
+        <div class="short-line-3"></div>
+        <div class="short-line-4"></div>
+        <div class="short-line-5"></div>
+        <div class="short-line-6"></div>
+        
+        <!-- Седьмая длинная горизонтальная линия -->
+        <div class="seventh-line"></div>
+        
+        <!-- Восьмая длинная горизонтальная линия -->
+        <div class="eighth-line"></div>
+        
+        <!-- Контейнер с колонкой клиентов и картинкой -->
+        <div class="content-row">
+            <div class="clients-column">
+                <div class="client-item" data-project="acme">
+                    <div class="client-name">ACME</div>
+                </div>
+                <div class="client-item" data-project="abel">
+                    <div class="client-name">Abel</div>
+                </div>
+                <div class="client-item" data-project="blunt">
+                    <div class="client-name">BLUNT Umbrellas</div>
+                </div>
+                <div class="client-item" data-project="becuming">
+                    <div class="client-name">Becuming</div>
+                </div>
+                <div class="client-item" data-project="deadly">
+                    <div class="client-name">Deadly Ponies</div>
+                </div>
+                
+                <!-- Пагинация -->
+                <div class="pagination">
+                    <div class="pagination-info">Показано 5 из 15 проектов</div>
+                    <div class="pagination-controls">
+                        <div class="pagination-numbers">
+                            <button class="pagination-number active" data-page="1">1</button>
+                            <button class="pagination-number" data-page="2">2</button>
+                            <button class="pagination-number" data-page="3">3</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="random-image"></div>
+        </div>
+        
+        <!-- Горизонтальная линия под блоком -->
+        <div class="block-bottom-line"></div>
+        
+        <!-- Вторая горизонтальная линия под блоком -->
+        <div class="block-bottom-line-2"></div>
+        
+        <!-- Горизонтальная линия справа от оси Y -->
         
         <!-- Дополнительные секции в стиле mantis -->
         <section class="mantis-section">
@@ -1069,7 +1450,7 @@
                         entry.target.classList.add('active');
                         
                         // Анимация чисел
-                        if (entry.target.classList.contains('mantis-number')) {
+                        if (entry.target.classList.contains('mantis-number') || entry.target.classList.contains('center-number')) {
                             animateNumber(entry.target);
                         }
                     }
@@ -1123,6 +1504,122 @@
                     header.classList.add('revealed');
                 }
             }, 200);
+        });
+    </script>
+
+    <!-- JavaScript для смены картинок при наведении и пагинации -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const clientItems = document.querySelectorAll('.client-item');
+            const randomImage = document.querySelector('.random-image');
+            const paginationNumbers = document.querySelectorAll('.pagination-number');
+            const paginationInfo = document.querySelector('.pagination-info');
+            
+            // Данные для разных страниц
+            const pageData = {
+                1: {
+                    projects: [
+                        { name: 'ACME', project: 'acme' },
+                        { name: 'Abel', project: 'abel' },
+                        { name: 'BLUNT Umbrellas', project: 'blunt' },
+                        { name: 'Becuming', project: 'becuming' },
+                        { name: 'Deadly Ponies', project: 'deadly' }
+                    ],
+                    info: 'Показано 5 из 15 проектов'
+                },
+                2: {
+                    projects: [
+                        { name: 'Flooring Xtra', project: 'flooring' },
+                        { name: 'Kōkako', project: 'kokako' },
+                        { name: 'Leif', project: 'leif' },
+                        { name: 'Muse', project: 'muse' },
+                        { name: 'RUBY', project: 'ruby' }
+                    ],
+                    info: 'Показано 5 из 15 проектов'
+                },
+                3: {
+                    projects: [
+                        { name: 'Woodwrights', project: 'woodwrights' },
+                        { name: 'Studio Almond', project: 'almond' },
+                        { name: 'Creative Agency', project: 'creative' },
+                        { name: 'Design Studio', project: 'design' },
+                        { name: 'Brand Lab', project: 'brand' }
+                    ],
+                    info: 'Показано 5 из 15 проектов'
+                }
+            };
+            
+            // Устанавливаем начальный класс для картинки
+            randomImage.classList.add('acme');
+            
+            // Функция для обновления списка проектов
+            function updateProjectsList(page) {
+                const clientsColumn = document.querySelector('.clients-column');
+                const paginationDiv = document.querySelector('.pagination');
+                
+                // Удаляем старые проекты (кроме пагинации)
+                const oldProjects = clientsColumn.querySelectorAll('.client-item');
+                oldProjects.forEach(project => project.remove());
+                
+                // Добавляем новые проекты
+                pageData[page].projects.forEach(projectData => {
+                    const projectDiv = document.createElement('div');
+                    projectDiv.className = 'client-item';
+                    projectDiv.setAttribute('data-project', projectData.project);
+                    projectDiv.innerHTML = `<div class="client-name">${projectData.name}</div>`;
+                    
+                    // Вставляем перед пагинацией
+                    clientsColumn.insertBefore(projectDiv, paginationDiv);
+                });
+                
+                // Обновляем информацию
+                paginationInfo.textContent = pageData[page].info;
+                
+                // Добавляем обработчики событий к новым элементам
+                addHoverListeners();
+            }
+            
+            // Функция для добавления обработчиков наведения
+            function addHoverListeners() {
+                const newClientItems = document.querySelectorAll('.client-item');
+                
+                newClientItems.forEach(item => {
+                    item.addEventListener('mouseenter', function() {
+                        const project = this.getAttribute('data-project');
+                        
+                        // Удаляем все предыдущие классы
+                        randomImage.classList.remove('acme', 'abel', 'blunt', 'becuming', 'deadly', 'flooring', 'kokako', 'leif', 'muse', 'ruby', 'woodwrights', 'almond', 'creative', 'design', 'brand');
+                        
+                        // Добавляем новый класс
+                        randomImage.classList.add(project);
+                    });
+                    
+                    item.addEventListener('mouseleave', function() {
+                        // Возвращаем к исходному состоянию
+                        randomImage.classList.remove('acme', 'abel', 'blunt', 'becuming', 'deadly', 'flooring', 'kokako', 'leif', 'muse', 'ruby', 'woodwrights', 'almond', 'creative', 'design', 'brand');
+                        randomImage.classList.add('acme');
+                    });
+                });
+            }
+            
+            // Обработчики для пагинации
+            paginationNumbers.forEach(button => {
+                button.addEventListener('click', function() {
+                    const page = parseInt(this.getAttribute('data-page'));
+                    
+                    // Убираем активный класс со всех кнопок
+                    paginationNumbers.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Добавляем активный класс к текущей кнопке
+                    this.classList.add('active');
+                    
+                    // Обновляем список проектов
+                    updateProjectsList(page);
+                });
+            });
+            
+            // Инициализируем обработчики для первой страницы
+            addHoverListeners();
         });
     </script>
 </body>
